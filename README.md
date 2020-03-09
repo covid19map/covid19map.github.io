@@ -1,1 +1,0 @@
-# covid19map.github.io
