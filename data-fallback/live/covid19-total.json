@@ -1,0 +1,18 @@
+{
+  "confirmed": {
+    "value": 116558,
+    "detail": "https://covid19.mathdro.id/api/confirmed"
+  },
+  "recovered": {
+    "value": 64391,
+    "detail": "https://covid19.mathdro.id/api/recovered"
+  },
+  "deaths": {
+    "value": 4090,
+    "detail": "https://covid19.mathdro.id/api/deaths"
+  },
+  "daily": "https://covid19.mathdro.id/api/daily",
+  "image": "https://covid19.mathdro.id/api/og",
+  "source": "https://github.com/mathdroid/covid19",
+  "lastUpdate": "2020-03-10T16:53:13.000Z"
+}
