@@ -1,8 +1,8 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 ## CORONA hub
 
 *tl;dr* _Inspect and track data about the Corona virus outbreak_
+
+Current prototype: https://covid19map.github.io/
 
 The not so wonderful dashboard by [arcgis.com](https://experience.arcgis.com/experience/685d0ace521648f8a5beeeee1b9125cd)  - we're sry guys at arcgis(!) - was our starting point. We wanted not only to see what could be improved in terms of visualisation and usability, but also in terms of functionality and scaleability.
 
