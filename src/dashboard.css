@@ -1,0 +1,48 @@
+/* 0px */
+/* 480px */
+/* 1024px */
+/* 1200px */
+.modal-filters {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.modal-filters {
+  min-width: 550px;
+  min-height: 300px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 600px) {
+  .modal-filters {
+    min-width: 300px;
+  }
+}
+
+.modal-filters > div {
+  width: 100%;
+  margin: 50px 0 0 0;
+}
+
+.modal-filters h2 {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.modal-filters .filter-label {
+  margin: 25px 0 15px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+/*# sourceMappingURL=dashboard.css.map */

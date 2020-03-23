@@ -1,0 +1,34 @@
+@import './theme/theme';
+@import './theme/placeholders';
+
+.modal-filters {
+  $padding: 20px;
+  @extend %flex-centering;
+  min-width: 550px;
+  min-height: 300px;
+  padding: $padding;
+  border-radius: $border-radius / 2;
+
+  @media screen and (max-width: 600px) {
+    min-width: 300px;
+  }
+
+  & > div {
+    width: 100%;
+    margin: 50px 0 0 0;
+  }
+
+  h2 {
+    position: absolute;
+    top: $padding;
+    left: $padding;
+  }
+
+  .filter-label {
+    margin: 25px 0 15px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+}

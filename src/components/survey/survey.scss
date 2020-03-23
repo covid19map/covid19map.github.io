@@ -1,0 +1,119 @@
+@import '../../theme/theme';
+@import '../../theme/placeholders';
+
+$height-hero: 200px;
+
+.corona-survey-hero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: $height-hero;
+  background-image: linear-gradient($color-primary, $color-secondary);
+}
+
+.corona-survey {
+  @extend %flex-centering;
+  @extend %full-viewport;
+  height: auto;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  margin: $height-hero 0 0 0;
+  padding: 20px 15vw;
+
+  h2 {
+    width: 100%;
+  }
+}
+
+.corona-survey__question, .corona-survey__answers {
+  width: 75%;
+  margin: 20px auto;
+}
+
+.corona-survey__conclusion {
+  text-align: center;
+}
+
+//---------------
+
+.survey__step {
+  width: 100%;
+  margin: 20px auto;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 900;
+  color: $color-primary;
+
+  span {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 350;
+    transform: translate(0, 5px);
+  }
+}
+
+.survey-caroussel {
+  $button-height: 45px;
+  $button-offset: 20px;
+  position: relative;
+  width: 100%;
+  min-height: 67vh;
+
+  .survey-slide-render {
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: -1;
+    transform: scale(1, 0);
+    transition: transform .25s ease-out, opacity .4s ease;
+  
+    &.visible {
+      opacity: 1;
+      z-index: 1;
+      transform: scale(1, 1);
+    }
+  }
+
+  .survey-slide-render__inner {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: calc(100% - #{$button-height + 4*$button-offset});
+    overflow: auto;
+  }
+  
+  .survery-caroussel__controls {
+    @extend %flex-centering;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 0;
+    z-index: 2;
+  
+    button {
+      min-width: 150px;
+      height: $button-height;
+      margin: $button-offset;
+      padding: 0 10px;
+      font: inherit;
+      font-weight: 650;
+      color: $color-light;
+      background: $color-primary;
+      border: none;
+      border-radius: 12px;
+      outline: none;
+      cursor: pointer;
+      transition: background .4s ease;
+
+      &:hover {
+        background: lighten($color-primary, 10%);
+      }
+    }
+  }
+}

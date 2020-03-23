@@ -1,0 +1,27 @@
+$base: 16px;
+$spacing: 1rem;
+
+$typography-font-sans: 'Jura';
+$typography-font-serif: 'Forum';
+$typography-text: 1rem;
+$typography-title: 2rem;
+
+$breakpoint-xs: 0em;  /* 0px */
+$breakpoint-sm: 30em; /* 480px */
+$breakpoint-md: 64em; /* 1024px */
+$breakpoint-lg: 75em; /* 1200px */
+
+$color-primary: #6d9197;
+$color-secondary: #c4cdc1;
+$color-tertiary: #99aead;
+$color-dark: #28364d;
+$color-light: #dee1dd;
+$color-infected: #2f575d;
+$color-recovered: #658b6f;
+$color-deaths: #f8b95f;
+
+$border-radius: 20px;
+$border-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+
+$lenghts-navigation-offset: 35px;
+$lenghts-navigation-height: 90vh;

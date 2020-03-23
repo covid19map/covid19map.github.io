@@ -1,0 +1,110 @@
+.timeline {
+  $dimen: 20px;
+  $offsetX: 80px;
+
+  display: flex;
+  //flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-evenly;
+  position: fixed;
+  bottom: 55px;
+  left: $offsetX;
+  width: calc(100vw - #{2*$offsetX} - #{2*$dimen});
+  height: $dimen;
+  padding: 0 $dimen;
+  background: #eee;
+  border-radius: 20px;
+  cursor: pointer;
+  z-index: 1;
+  transform: translate(100vw) scale(0) skew(20deg);
+  transition: transform .5s cubic-bezier(.2,1,.6,1);
+
+  &.expanded {
+    transform: translate(0) scale(1) skew(0);
+  }
+
+  .timeline__node {
+    $dimenNode: .8*$dimen;
+
+    position: relative;
+    width: $dimenNode;
+    height: $dimenNode;
+    margin: 0;
+    padding: 0;
+    border-radius: 50%;
+    background: transparent;
+    transition: .2s;
+    z-index: 2;
+
+    &:hover {
+      padding: 25px;
+
+      .timeline__node__circle {
+        transform: scale(.8);
+        background: lighten(#4378d9, 10%);
+      }
+
+      .timeline__node__timestamp {
+        background: #ddd;
+        opacity: .85;
+        pointer-events: auto;
+      }
+    }
+
+    .timeline__node__circle {
+      background: #333;
+      width: $dimenNode;
+      height: $dimenNode;
+      border-radius: 50%;
+      transform: scale(1);
+      transition: .2s;
+    }
+
+    .timeline__node__timestamp {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100px;
+      margin: 0;
+      padding: 4px;
+      opacity: 0;
+      font-size: 11px;
+      text-align: center;
+      line-height: 20px;
+      border-radius: 14px 0 0 14px;
+      pointer-events: none;
+      transition: all .1s ease-in;
+      transform: rotate(90deg) translate(-45px, 22px);
+    }
+  }
+
+  .close-button {
+    $dimenClose: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: calc(#{-.5*$dimenClose} + #{.5*$dimen});
+    left: 0;
+    width: 50px;
+    height: 50px;
+    background: #ccc;
+    border-radius: 50%;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      transform: scale(.9) rotate(90deg);
+      transition: transform .1s ease-in;
+    }
+
+    &:hover svg {
+      fill: #4378d9;
+      transform: scale(1) rotate(0);
+    }
+  }
+}

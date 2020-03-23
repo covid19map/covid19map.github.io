@@ -1,0 +1,150 @@
+@import '../../theme/theme';
+
+@mixin transform($params) {
+	-webkit-transform: $params;
+	-moz-transform: $params;
+	-ms-transform: $params;
+	transform: $params;
+}
+
+@mixin animation($params) {
+	-webkit-animation: $params;
+	-moz-animation: $params;
+	-ms-animation: $params;
+	animation: $params;
+}
+
+.loader-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: $color-dark;
+  z-index: 999;
+}
+
+.loader-title {
+  $width: 200px;
+
+  position: absolute;
+  top: 40%;
+  left: calc((100% - #{$width}) / 2);
+  width: $width;
+  font-size: 14px;
+  color: #ddd;
+  text-align: center;
+}
+
+.loader {
+  position: absolute;
+  width: 15rem;
+  height: 15rem;
+  left: 50%;
+  top: 50%;
+  @include transform(translateX(-50%) translateY(-50%) rotate(-90deg) scaleX(-1));
+  
+  div {
+    position: absolute;
+    left: 0;
+    width: .25rem;
+    height: .25rem;
+    background: #d7ebf5;
+    border-radius: 1rem;
+    opacity: 0;
+  }
+}
+
+$time: 2s;
+$delay: .1s;
+$padding: .6rem;
+
+@for $i from 0 through 25 {
+  .loader div:nth-child(#{$i + 1}){
+    top: $i * $padding;
+    @if $i % 2 == 0 {
+      background: saturate(#e03157, 20);
+      @include animation(dna-rotatation #{$time} #{$i * $delay} infinite ease-in-out);
+    }
+    @else{
+      @include animation(dna-rotatation #{$time} #{$i * $delay + $time / 2} infinite ease-in-out);
+    }
+  }
+}
+
+@keyframes dna-rotatation {
+  0% {
+    opacity: 1;
+    left: 40%;
+    z-index: 0;
+    @include transform(scale(1));
+  }
+  25% {
+    opacity: 1;
+    @include transform(scale(1.8));
+  }
+  50% {
+    opacity: 1;
+    left: 60%;
+    z-index: 1;
+    @include transform(scale(1));
+  }
+  75% {
+    opacity: 1;
+    @include transform(scale(0.5));
+  }
+  100% {
+    opacity: 1;
+    left: 40%;
+    z-index: 0;
+    @include transform(scale(1));
+  }
+}
+
+@mixin circular-loader(
+  $width: 85px,
+  $latitude: 8px,
+  $animation-time: 1s,
+  $color: #fff
+) {
+  $delay-unit: $animation-time / 8;
+  display: inline-block;
+  position: relative;
+  width: $width;
+  height: $width;
+  
+  div {
+    $width-inner: calc(#{$width - 2*$latitude} - 1px);
+    box-sizing: border-box;
+    position: absolute;
+    display: block;
+    width: $width-inner;
+    height: $width-inner;
+    margin: $latitude;
+    border: $latitude solid $color;
+    border-radius: 50%;
+    animation: circular-loader $animation-time cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: $color transparent transparent transparent;
+    
+    @for $i from 1 to 4 {
+      &:nth-child(#{$i}) {
+        animation-delay: -#{(4 - $i)*$delay-unit};
+      }
+    }
+    
+    @keyframes circular-loader {
+      from {
+        transform: rotate(0deg);
+      }
+      
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}
+
+.circular-loader {
+  @include circular-loader;
+}
+

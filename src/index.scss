@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Forum&family=Jura:wght@515&display=swap');
+@import './theme/theme';
+@import './theme/placeholders';
+
+/*
+* {
+  box-sizing: border-box;
+}
+*/
+
+body {
+  @extend %full-viewport;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, $typography-font-sans, 'Segoe UI',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 13px;
+
+  @media only screen and (max-width: 600px) {
+    font-size: 9px;
+  }
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
