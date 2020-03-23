@@ -111,6 +111,34 @@
   overflow: auto;
 }
 
+.survey-caroussel .survey-slide-render__inner::-webkit-scrollbar, .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-thumb, .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-track {
+  width: 8px;
+  border: none;
+  background: transparent;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-button, .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-track-piece, .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-corner, .survey-caroussel .survey-slide-render__inner::-webkit-resizer {
+  display: none;
+}
+
+.survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  background-color: #c4cdc1;
+}
+
+.survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-thumb:hover {
+  background-color: #99aead;
+}
+
+.survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-track {
+  background-image: url("https://i.imgur.com/GvV1R30.png");
+  background-repeat: repeat-y;
+  background-size: contain;
+  opacity: .2;
+}
+
 .survey-caroussel .survery-caroussel__controls {
   position: absolute;
   bottom: 0;

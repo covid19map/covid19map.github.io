@@ -128,7 +128,7 @@ export default class CoronaSurvey extends Component {
                 möglich sein als mit den gemeldeteten Labortests allein.
               </p>
               <p>
-                Halten Sie gut durch! <span role="img">💪</span>
+                Halten Sie gut durch! <span role="img" aria-label="strength">💪</span>
               </p>
             </div>
           </SurveySlide>

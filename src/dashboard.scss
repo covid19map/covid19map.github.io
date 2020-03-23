@@ -4,10 +4,13 @@
 .modal-filters {
   $padding: 20px;
   @extend %flex-centering;
+  position: fixed;
+  bottom: 65px;
   min-width: 550px;
-  min-height: 300px;
+  min-height: 150px;
   padding: $padding;
   border-radius: $border-radius / 2;
+  transform: translate(calc(50vw - 50%));
 
   @media screen and (max-width: 600px) {
     min-width: 300px;
@@ -25,10 +28,29 @@
   }
 
   .filter-label {
-    margin: 25px 0 15px;
+    margin: 15px 0 10px;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
   }
+}
+
+.modal-filters-overlay {
+  background: transparent;
+  background-color: rgba(30, 30, 36, .3);
+}
+
+.dashboard-display-time {
+  position: fixed;
+  top: 1.2*$lenghts-navigation-offset;
+  left: 0;
+  padding: 10px;
+  font-size: 16px;
+  color: $color-dark;
+  background: lighten($color-tertiary, 10%);
+  border-radius: .8*$border-radius;
+  opacity: .7;
+  transform: translate(calc(50vw - 50%));
+  z-index: 100;
 }

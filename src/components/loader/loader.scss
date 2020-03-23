@@ -105,7 +105,7 @@ $padding: .6rem;
   $width: 85px,
   $latitude: 8px,
   $animation-time: 1s,
-  $color: #fff
+  $color: $color-primary
 ) {
   $delay-unit: $animation-time / 8;
   display: inline-block;

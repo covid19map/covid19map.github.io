@@ -15,10 +15,14 @@
 }
 
 .modal-filters {
+  position: fixed;
+  bottom: 65px;
   min-width: 550px;
-  min-height: 300px;
+  min-height: 150px;
   padding: 20px;
   border-radius: 10px;
+  -webkit-transform: translate(calc(50vw - 50%));
+          transform: translate(calc(50vw - 50%));
 }
 
 @media screen and (max-width: 600px) {
@@ -39,10 +43,30 @@
 }
 
 .modal-filters .filter-label {
-  margin: 25px 0 15px;
+  margin: 15px 0 10px;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
+}
+
+.modal-filters-overlay {
+  background: transparent;
+  background-color: rgba(30, 30, 36, 0.3);
+}
+
+.dashboard-display-time {
+  position: fixed;
+  top: 42px;
+  left: 0;
+  padding: 10px;
+  font-size: 16px;
+  color: #28364d;
+  background: #b5c5c4;
+  border-radius: 16px;
+  opacity: .7;
+  -webkit-transform: translate(calc(50vw - 50%));
+          transform: translate(calc(50vw - 50%));
+  z-index: 100;
 }
 /*# sourceMappingURL=dashboard.css.map */

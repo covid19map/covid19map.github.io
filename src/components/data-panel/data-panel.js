@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import DataChart from './data-chart';
-import { condenseData } from '../../utilities/data-mutations';
+import { CircularLoader } from '../loader/loader';
+import { condenseData, filterOrderedProps } from '../../utilities/data-mutations';
 import { bigIntegerDisplay, percentageDisplay } from '../../utilities/formatting';
 import './data-panel.css';
 
@@ -13,7 +14,7 @@ const DataPanel = (props) => {
     onToggleCharts,
   } = props;
   const isDataNotEmpty = !!Object.keys(data).length;
-  let condensedData, condensedDataCurrent;
+  let condensedData, condensedDataCurrent, condensedDataConfined;
   if(isDataNotEmpty) {
     const confirmedValues = condenseData('confirmed', data),
           recoveredValues = condenseData('recovered', data),
@@ -28,17 +29,31 @@ const DataPanel = (props) => {
       recovered: recoveredValues[currentTime],
       deaths: deathsValues[currentTime],
     }
+    condensedDataConfined = {
+      confirmed: filterOrderedProps(currentTime, confirmedValues),
+      recovered: filterOrderedProps(currentTime, recoveredValues),
+      deaths: filterOrderedProps(currentTime, deathsValues),
+    };
   }
   const controlHandlers = { onToggleFilters, onToggleCharts }
   const clsCharts = `charts-container ${chartsExpanded ? 'expanded' : ''}`
   return(
     <Fragment>
       <div className="data-panel">
-        {isDataNotEmpty && <DataPanelTiles {...condensedDataCurrent} />}
-        <DataPanelControls {...controlHandlers} />
+        {isDataNotEmpty ?
+          <Fragment>
+            <DataPanelTiles {...condensedDataCurrent} />
+            <DataPanelControls {...controlHandlers} />
+          </Fragment>
+          : <div style={{ zIndex: 1000 }}><CircularLoader /></div>
+        }
       </div>
       <div className={clsCharts}>
-        {isDataNotEmpty && <DataChart data={condensedData} />}
+        <div className="charts-container__heading">
+          <h2>Data chart</h2>
+          <h3>(Cases over time)</h3>
+        </div>
+        {isDataNotEmpty && <DataChart data={condensedDataConfined} />}
       </div>
     </Fragment>
   );
@@ -61,7 +76,7 @@ const DataPanelTiles = ({ confirmed, deaths, recovered }) => {
           Active cases: {bigIntegerDisplay(confirmed - deaths - recovered)}
         </div>
         <div>
-          Recovered quota: {`${percentageDisplay(recovered / confirmed * 100)}%`}
+          Recovery rate: {`${percentageDisplay(recovered / confirmed * 100)}%`}
         </div>
         <div>
           Mortality rate: {`${percentageDisplay(deaths / confirmed * 100)}%`}

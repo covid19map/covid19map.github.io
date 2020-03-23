@@ -10,6 +10,7 @@ const __includesArray = (array, possiblities) => (
   !!array ? possiblities.map(p => array.includes(p)).reduce(__or, false) : true
 )
 
+// TODO: make function names more expressive
 // B.F. TODO: Add tests!
 
 const __condenseDataset = (prop, dataset) => (
@@ -49,6 +50,10 @@ export const filterProps = (props, data) => {
   });
   return r;
 }
+
+export const filterOrderedProps = (threshhold, data) => (
+  Object.fromEntries(Object.entries(data).filter(x => x[0] <= threshhold))
+);
 
 const __filterPropValuePair = (props, values, dataset) => (
   dataset.filter(

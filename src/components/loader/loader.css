@@ -294,11 +294,11 @@
   width: calc(69px - 1px);
   height: calc(69px - 1px);
   margin: 8px;
-  border: 8px solid #fff;
+  border: 8px solid #6d9197;
   border-radius: 50%;
   -webkit-animation: circular-loader 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
           animation: circular-loader 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #fff transparent transparent transparent;
+  border-color: #6d9197 transparent transparent transparent;
 }
 
 .circular-loader div:nth-child(1) {

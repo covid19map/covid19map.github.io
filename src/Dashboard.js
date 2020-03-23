@@ -149,14 +149,14 @@ export default class Dashboard extends Component {
       data: {
         fetched: data,
         filtered: data,
-        currentTime,
-      }
+      },
+      currentTime
     });
     const __registeredRegions = [
       ...data[currentTime].map(datapoint => datapoint.province).filter(province => !!province),
       ...data[currentTime].map(datapoint => datapoint.country)
     ];
-    this.registeredRegions = [...new Set(__registeredRegions)].map(
+    this.registeredRegions = [...new Set(__registeredRegions)].sort().map(
       region => ({ value: region, label: region })
     );
   }
@@ -183,14 +183,31 @@ export default class Dashboard extends Component {
     } = state;
   
     const timestamps = Object.keys(filtered);
+    const timeBegin = Number(timestamps[0]);
+    const timeEnd = Number(timestamps[timestamps.length - 1]);
     const geoData = interfaceOutGeoJSON(filtered[currentTime]);
     
     return(
       <Fragment>
+        {filtered && <DataPanel
+          data={filtered}
+          currentTime={currentTime}
+          chartsExpanded={chartsExpanded}
+          onToggleFilters={handleToggleFilters}
+          onToggleCharts={handleToggleCharts}
+        />}
+        {geoData && <DataMap
+          data={geoData}
+          mapStyle={mapStyle}
+          onClick={handleCollapseCharts}
+        />}
         <Modal
           open={filtersExpanded}
           onClose={handleCollapseFilters}
-          classNames={{ modal: 'modal-filters' }}
+          classNames={{
+            modal: 'modal-filters',
+            overlay: 'modal-filters-overlay'
+          }}
           center
         >
           <h2>Data filters</h2>
@@ -205,25 +222,18 @@ export default class Dashboard extends Component {
           <div className="filter-label">Time</div>
           <DiscreteSlider
             min={0}
-            max={timestamps[timestamps.length - 1] - timestamps[0]}
-            availableValues={timestamps.map(t => t - timestamps[0])}
-            startValue={currentTime - timestamps[0]}
+            max={timeEnd - timeBegin}
+            availableValues={timestamps.map(t => t - timeBegin)}
+            startValue={currentTime - timeBegin}
             onChange={handleSetTime}
-            formatValue={(v) => dateDisplay(new Date(v + Number(timestamps[0])))}
+            formatValue={(v) => dateDisplay(new Date(v + Number(timeBegin)))}
           />
         </Modal>
-        {filtered && <DataPanel
-          data={filtered}
-          currentTime={currentTime}
-          chartsExpanded={chartsExpanded}
-          onToggleFilters={handleToggleFilters}
-          onToggleCharts={handleToggleCharts}
-        />}
-        {geoData && <DataMap
-          data={geoData}
-          mapStyle={mapStyle}
-          onClick={handleCollapseCharts}
-        />}
+        {!(currentTime === 0 || currentTime === timeEnd || filtersExpanded) &&
+          <div className="dashboard-display-time">
+            Current time: {dateDisplay(new Date(currentTime))}
+          </div>
+        }
       </Fragment>
     );
   }
