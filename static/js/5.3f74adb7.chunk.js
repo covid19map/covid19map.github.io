@@ -1,2 +1,0 @@
-(this["webpackJsonpcorona-cub"]=this["webpackJsonpcorona-cub"]||[]).push([[5],{206:function(e,n,a){"use strict";a.r(n);var c=a(0),t=a.n(c);n.default=function(){return t.a.createElement("div",{className:"survey"},t.a.createElement("h2",null,"Survey"))}}}]);
-//# sourceMappingURL=5.3f74adb7.chunk.js.map
