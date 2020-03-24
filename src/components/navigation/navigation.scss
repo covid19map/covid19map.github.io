@@ -31,20 +31,20 @@ $width-toggle: 60px;
     margin: 25px auto;
   }
 
-  li {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 12px 0;
-    font-size: 14px;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: letter-spacing .4s ease;
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color .4s ease;
 
-    a {
-      color: inherit;
-      text-decoration: none;
-      transition: color .4s ease;
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 12px 0;
+      font-size: 14px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: letter-spacing .4s ease;
     }
   
     svg {
@@ -53,14 +53,13 @@ $width-toggle: 60px;
       height: $width;
       fill: $color-light;
       margin: 0 10px 0 0;
-      //transform: translate(0, 5px);
     }
   
     &:hover, &.active {
-      letter-spacing: 2px;
+      color: $color-dark;
 
-      a {
-        color: $color-dark;
+      li {
+        letter-spacing: 2px;
       }
   
       svg {

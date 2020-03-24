@@ -2,10 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { Link } from "@reach/router"
 import './navigation.css';
 
-const isActive = ({ isCurrent }) => {
-  return isCurrent ? { className: "active" } : {}
-}
-
 export default class Navigation extends Component {
   constructor() {
     super();
@@ -41,7 +37,7 @@ export default class Navigation extends Component {
   */
 
   render() {
-    const { state, handleToggle } = this,
+    const { state, handleToggle, handleCollapse } = this,
           { isExpanded } = state,
           clsNav = `navigation ${isExpanded ? 'expanded' : ''}`,
           clsToggle = `navigation-toggle ${isExpanded ? 'expanded' : ''}`;
@@ -52,18 +48,36 @@ export default class Navigation extends Component {
         </div>
         <nav className={clsNav}>
           <div className="navigation__brand">Corona<span>hub</span></div>
-          <ul>
-            <li><HomeIcon /><Link to="/" getProps={isActive}>Home</Link></li>
-            <li><TableIcon /><Link to="/table" getProps={isActive}>Table</Link></li>
-            <li><SurveyIcon /><Link to="/survey" getProps={isActive}>Survey</Link></li>
-            <li><ContactIcon /><Link to="/contact" getProps={isActive}>Contact</Link></li>
-            <li><ImprintIcon /><Link to="/imprint" getProps={isActive}>Imprint</Link></li>
-          </ul>
+          <NavList onClose={handleCollapse}>
+            <NavLink to="/"><HomeIcon /> Home</NavLink>
+            <NavLink to="/table"><TableIcon /> Table</NavLink>
+            <NavLink to="/survey"><SurveyIcon /> Survey</NavLink>
+            <NavLink to="/contact"><ContactIcon /> Contact</NavLink>
+            <NavLink to="/imprint"><ImprintIcon /> Imprint</NavLink>
+          </NavList>
         </nav>
       </Fragment>
     );
   }
 }
+
+const __setActive = ({ isCurrent }) => {
+  return isCurrent ? { className: "active" } : {}
+}
+
+const NavList = ({ onClose, children }) => {
+  return(
+    <ul>
+      {children.map((c, i) => (
+        <Link key={i} to={c.props.to} getProps={__setActive}>
+          <li onClick={onClose}>{c.props.children}</li>
+        </Link>
+      ))}
+    </ul>
+  );
+}
+
+const NavLink = ({ children }) => <Fragment>{children}</Fragment>;
 
 const MenuIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24">

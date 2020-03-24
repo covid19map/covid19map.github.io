@@ -2,6 +2,10 @@
 /* 480px */
 /* 1024px */
 /* 1200px */
+/* 0px */
+/* 480px */
+/* 1024px */
+/* 1200px */
 .modal-filters {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -68,5 +72,10 @@
   -webkit-transform: translate(calc(50vw - 50%));
           transform: translate(calc(50vw - 50%));
   z-index: 100;
+}
+
+.data-map-container > div, .data-map-container > div > div {
+  width: 100vw !important;
+  height: 100vh !important;
 }
 /*# sourceMappingURL=dashboard.css.map */

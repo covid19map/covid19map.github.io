@@ -177,6 +177,10 @@
   margin: 10px 20px;
 }
 
+.charts-container .charts-container__source {
+  margin: 25px auto;
+}
+
 .charts-container .charts-container__source a {
   font-weight: 1000;
   color: #28364d;

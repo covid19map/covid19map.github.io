@@ -123,6 +123,7 @@ $data-panel-offset : $lenghts-navigation-offset;
   .charts-container__source {
     $color: $color-dark;
     $color-hover: lighten($color, 25%);
+    margin: 25px auto;
 
     a {
       font-weight: 1000;

@@ -85,7 +85,7 @@ export default class DataTable extends Component {
                 selected={sortProp}
                 sortDirections={sortAscending}
                 columns={[
-                  { title: 'Country / Region', prop: 'country' },
+                  { title: 'Country', prop: 'country' },
                   { title: 'Province / State', prop: 'province' },
                   { title: 'Confirmed', prop: 'confirmed' },
                   { title: 'Recovered', prop: 'recovered' },

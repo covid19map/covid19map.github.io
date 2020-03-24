@@ -5,7 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiZ2lhbm5vdHIiLCJhIjoiY2s3aHFkcDkwMGMzYjNlbzNvMWl4bGFxbyJ9.2p2O5m7aiA6Bn9vjPe7HrQ';
 
-const DataMap = ({ data, mapStyle, onClick }) => {
+const DataMap = ({ container, data, mapStyle, onClick }) => {
   const [viewport, setViewport] = useState({
     width: '100vw',
     height: '100vh',
@@ -28,6 +28,7 @@ const DataMap = ({ data, mapStyle, onClick }) => {
   return (
     <ReactMapGL
       {...viewport}
+      container={container}
       onViewportChange={setViewport}
       mapboxApiAccessToken={MAPBOX_TOKEN}
       mapStyle={mapStyleURI}

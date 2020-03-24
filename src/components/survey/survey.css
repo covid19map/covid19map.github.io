@@ -2,6 +2,10 @@
 /* 480px */
 /* 1024px */
 /* 1200px */
+/* 0px */
+/* 480px */
+/* 1024px */
+/* 1200px */
 .corona-survey {
   width: 100vw;
   height: 100vh;
@@ -23,10 +27,9 @@
 
 .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar, .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-thumb, .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-track {
   width: 8px;
+  height: 8px;
   border: none;
   background: transparent;
-  cursor: -webkit-grab;
-  cursor: grab;
 }
 
 .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-button, .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-track-piece, .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-corner, .survey-caroussel .survey-slide-render__inner::-webkit-resizer {
@@ -35,18 +38,26 @@
 
 .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-thumb {
   border-radius: 6px;
-  background-color: #c4cdc1;
+  background-color: #a9b6a5;
 }
 
 .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-thumb:hover {
-  background-color: #99aead;
+  background-color: #8ba3a2;
 }
 
 .survey-caroussel .survey-slide-render__inner::-webkit-scrollbar-track {
-  background-image: url("https://i.imgur.com/GvV1R30.png");
-  background-repeat: repeat-y;
-  background-size: contain;
-  opacity: .2;
+  border-radius: 6px;
+  background-color: #dfe4dd;
+  /*
+    background-image: url('https://i.imgur.com/GvV1R30.png');
+    background-repeat: repeat-y;
+    background-size: contain;
+    
+    &:horizontal {
+      background-image: none;
+      background-repeat: repeat-x;
+    }
+    */
 }
 
 .corona-survey-hero {

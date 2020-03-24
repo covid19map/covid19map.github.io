@@ -19,21 +19,26 @@
 
 .data-table::-webkit-scrollbar-thumb {
   border-radius: 6px;
-  background-color: #c4cdc1;
+  background-color: #a9b6a5;
 }
 
 .data-table::-webkit-scrollbar-thumb:hover {
-  background-color: #99aead;
+  background-color: #8ba3a2;
 }
 
 .data-table::-webkit-scrollbar-track {
-  background-image: url("https://i.imgur.com/GvV1R30.png");
-  background-repeat: repeat-y;
-  background-size: contain;
-}
-
-.data-table::-webkit-scrollbar-track:horizontal {
-  background-repeat: repeat-x;
+  border-radius: 6px;
+  background-color: #dfe4dd;
+  /*
+    background-image: url('https://i.imgur.com/GvV1R30.png');
+    background-repeat: repeat-y;
+    background-size: contain;
+    
+    &:horizontal {
+      background-image: none;
+      background-repeat: repeat-x;
+    }
+    */
 }
 
 @-webkit-keyframes scale-in {
@@ -85,7 +90,13 @@
   overflow: auto;
 }
 
+.data-table::-webkit-scrollbar-track {
+  margin-top: 75px;
+}
+
 .data-table table {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   width: 100%;
   padding: 0 10px;
   margin: 0;
@@ -105,7 +116,10 @@
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  padding: 20px 46px 20px 20px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  height: 67px;
+  padding: 0 46px 0 20px;
   font-weight: 900;
   color: #ebedeb;
   text-align: left;

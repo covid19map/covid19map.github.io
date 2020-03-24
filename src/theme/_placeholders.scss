@@ -36,16 +36,16 @@
 
   &::-webkit-scrollbar-thumb {
     border-radius: $border-radius;
-    background-color: $color-secondary;
+    background-color: darken($color-secondary, 10%);
 
     &:hover {
-      background-color: $color-tertiary;
+      background-color: darken($color-tertiary, 5%);
     }
   }
 
   &::-webkit-scrollbar-track {
     border-radius: $border-radius;
-    background: rgba(100, 100, 100, .4);
+    background-color: lighten($color-secondary, 10%);
     /*
     background-image: url('https://i.imgur.com/GvV1R30.png');
     background-repeat: repeat-y;

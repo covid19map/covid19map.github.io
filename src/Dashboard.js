@@ -47,6 +47,7 @@ export default class Dashboard extends Component {
       filtersExpanded: false,
     }
     this.registeredRegions = [];
+    this.mapNode = null;
   }
 
   handleReload = () => {
@@ -131,19 +132,36 @@ export default class Dashboard extends Component {
       },
       currentTime,
     });
-    const __registeredRegions = [
-      ...data[currentTime].map(datapoint => datapoint.province).filter(province => !!province),
-      ...data[currentTime].map(datapoint => datapoint.country)
-    ];
-    // eliminate double entries and sort alphabetically
-    this.registeredRegions = [...new Set(__registeredRegions)].sort().map(
+    // Register all possible countries and regions
+    // While eliminating double entries and sort alphabetically
+    const __registeredCountries = [
+      ...new Set(data[currentTime].map(datapoint => datapoint.country).sort())
+    ].map(
       region => ({ value: region, label: region })
     );
+    const __registeredProvinces = data[currentTime].map(
+      datapoint => datapoint.province
+    ).filter(
+      province => !!province
+    ).sort().map(
+      region => ({ value: region, label: region })
+    );
+    this.registeredRegions = [
+      {
+        label: "Countries",
+        options: __registeredCountries
+      },
+      {
+        label: "Provinces / States",
+        options: __registeredProvinces
+      },
+    ];
   }
 
   render(){
     const {
       state,
+      mapNode,
       registeredRegions,
       handleFilterCountries,
       handleSetTime,
@@ -176,11 +194,14 @@ export default class Dashboard extends Component {
           onToggleFilters={handleToggleFilters}
           onToggleCharts={handleToggleCharts}
         />}
-        {geoData && <DataMap
-          data={geoData}
-          mapStyle={mapStyle}
-          onClick={handleCollapseCharts}
-        />}
+        <div className="data-map-container" ref={e => this.mapNode = e}>
+          {geoData && <DataMap
+            data={geoData}
+            container={mapNode}
+            mapStyle={mapStyle}
+            onClick={handleCollapseCharts}
+          />}
+        </div>
         <Modal
           open={filtersExpanded}
           onClose={handleCollapseFilters}
@@ -191,7 +212,7 @@ export default class Dashboard extends Component {
           center
         >
           <h2>Data filters</h2>
-          <div className="filter-label">Country</div>
+          <div className="filter-label">Region</div>
           <Select
             isMulti
             name="countries"
