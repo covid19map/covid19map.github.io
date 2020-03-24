@@ -120,6 +120,36 @@ $data-panel-offset : $lenghts-navigation-offset;
     margin: 10px 20px;
   }
 
+  .charts-container__source {
+    $color: $color-dark;
+    $color-hover: lighten($color, 25%);
+
+    a {
+      font-weight: 1000;
+      color: $color;
+      text-decoration: none;
+      transition: color .3s ease-out;
+
+      svg {
+        $width: 20px;
+        width: $width;
+        height: $width;
+        margin: 0 4px 0 8px;
+        fill: $color;
+        transform: translate(0, $width / 4);
+        transition: fill .2s ease;
+      }
+
+      &:hover {
+        color: $color-hover;
+  
+        svg {
+          fill: $color-hover;
+        }
+      }
+    }
+  }
+
   h2 {
     margin: 30px 0 10px;
     font-size: 22px;

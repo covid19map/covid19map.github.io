@@ -32,4 +32,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+h2 {
+  font-size: 24px;
+}
 /*# sourceMappingURL=index.css.map */

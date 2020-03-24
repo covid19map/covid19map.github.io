@@ -2,6 +2,10 @@
 /* 480px */
 /* 1024px */
 /* 1200px */
+/* 0px */
+/* 480px */
+/* 1024px */
+/* 1200px */
 .data-panel__tile, .charts-container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -171,6 +175,33 @@
 .charts-container .charts-container__heading {
   width: 100%;
   margin: 10px 20px;
+}
+
+.charts-container .charts-container__source a {
+  font-weight: 1000;
+  color: #28364d;
+  text-decoration: none;
+  -webkit-transition: color .3s ease-out;
+  transition: color .3s ease-out;
+}
+
+.charts-container .charts-container__source a svg {
+  width: 20px;
+  height: 20px;
+  margin: 0 4px 0 8px;
+  fill: #28364d;
+  -webkit-transform: translate(0, 5px);
+          transform: translate(0, 5px);
+  -webkit-transition: fill .2s ease;
+  transition: fill .2s ease;
+}
+
+.charts-container .charts-container__source a:hover {
+  color: #5471a1;
+}
+
+.charts-container .charts-container__source a:hover svg {
+  fill: #5471a1;
 }
 
 .charts-container h2 {

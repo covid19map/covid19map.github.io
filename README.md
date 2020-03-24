@@ -1,4 +1,4 @@
-## CORONAhub
+## CORONA hub
 
 *tl;dr* _Inspect and track data about the Corona virus outbreak_
 

@@ -9,19 +9,16 @@
     "@testing-library/user-event": "^7.2.1",
     "chart.js": "^2.9.3",
     "eslint-plugin-flowtype": "^4.6.0",
-    "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.15",
     "r-dom": "^2.4.0",
     "react": "^16.13.0",
     "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.13.0",
     "react-map-gl": "^5.2.3",
-    "react-map-gl-heatmap-overlay": "^1.1.4",
     "react-promise-tracker": "^2.1.0",
     "react-responsive-modal": "^4.0.1",
     "react-scripts": "3.4.0",
-    "react-select": "^3.0.8",
-    "typescript": "^3.8.3"
+    "react-select": "^3.0.8"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,3 +1,5 @@
+@import './theme';
+
 %full-viewport {
   width: 100vw;
   height: 100vh;
@@ -9,4 +11,50 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+%scrollbar {
+  $border-radius: 6px;
+
+  &::-webkit-scrollbar,
+  &::-webkit-scrollbar-thumb,
+  &::-webkit-scrollbar-track {
+    $width: 8px;
+    width: $width;
+    height: $width;
+    border: none;
+    background: transparent;
+    //cursor: grab;
+  }
+
+  &::-webkit-scrollbar-button,
+  &::-webkit-scrollbar-track-piece,
+  &::-webkit-scrollbar-corner,
+  &::-webkit-resizer {
+    display: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: $border-radius;
+    background-color: $color-secondary;
+
+    &:hover {
+      background-color: $color-tertiary;
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: $border-radius;
+    background: rgba(100, 100, 100, .4);
+    /*
+    background-image: url('https://i.imgur.com/GvV1R30.png');
+    background-repeat: repeat-y;
+    background-size: contain;
+    
+    &:horizontal {
+      background-image: none;
+      background-repeat: repeat-x;
+    }
+    */
+  }
 }

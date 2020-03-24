@@ -1,0 +1,121 @@
+@import '../../theme/theme';
+@import '../../theme/placeholders';
+@import '../../theme/animations';
+
+$height-hero: 250px;
+$padding-y: 25px;
+
+.data-table-hero {
+  position: relative;
+  width: 100vw;
+  height: $height-hero;
+  background-image: linear-gradient(darken($color-primary, 5%), lighten($color-secondary, 5%));
+}
+
+.data-table-container {
+  position: relative;
+  width: 100vw;
+  box-sizing: border-box;
+  margin: 0 0 50px;
+  padding: $padding-y 100px;
+
+  h2 {
+    margin: 30px 10px;
+  }
+}
+
+.data-table {
+  $padding-x: 20px;
+  $text-align: left;
+  $offset-y: $height-hero + $padding-y;
+  @extend %scrollbar;
+  max-height: calc(100vh - #{$offset-y});
+  margin: 0 auto;
+  overflow: auto;
+
+  table {
+    width: 100%;
+    padding: 0 10px;
+    margin: 0;
+    //table-layout: fixed;
+  }
+
+  thead, tbody, tr {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  td {
+    text-align: $text-align;
+    padding: 6px $padding-x;
+  }
+
+  .data-table-category {
+    $width-icon: 26px;
+    $offset-x-icon: 10px;
+    position: sticky;
+    top: 0;
+    padding: 20px #{$width-icon + 2*$offset-x-icon} 20px $padding-x;
+    font-weight: 900;
+    color: lighten($color-light, 5%);
+    text-align: $text-align;
+    background: $color-tertiary;
+    transition: background .4s ease;
+    cursor: pointer;
+
+    &:first-child {
+      border-radius: $border-radius 0 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 $border-radius 0 0;
+    }
+
+    &:hover {
+      background: darken($color-tertiary, 10%);
+    }
+
+    &.selected {
+      background: darken($color-tertiary, 25%);
+    }
+
+    .data-table-category__sort-control {
+      position: absolute;
+      top: calc(50% - #{$width-icon / 2});
+      right: $offset-x-icon;
+      width: $width-icon;
+      height: $width-icon;
+      //border-radius: 50%;
+      transform: rotate(0);
+      transition: transform .1s ease-in;
+
+      &:hover {
+        svg {
+          animation: scale-in .4s ease;;
+        }
+      }
+
+      &.ascending {
+        transform: rotate(180deg);
+      }
+
+      svg {
+        width: $width-icon;
+        height: $width-icon;
+        pointer-events: none;
+        user-select: none;
+
+        path {
+          &:first-child {
+            fill: lighten($color-light, 10%);
+          }
+
+          &:last-child {
+            fill: $color-dark;
+            opacity: .33;
+          }
+        }
+      }
+    }
+  }
+}
