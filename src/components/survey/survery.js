@@ -1,6 +1,74 @@
 import React, { Component, Fragment } from 'react';
 import Select from 'react-select';
+//import { CircularLoader } from '../loader/loader';
+import { percentageDisplay } from '../../utilities/formatting';
 import './survey.css';
+import { CircularLoader } from '../loader/loader';
+
+const _scalarMult = (scalar, array) => (
+  array.map(a => scalar * a)
+);
+
+const _includesSymptoms = (values, symptoms) => (
+  values.reduce((acc, val) => acc || symptoms.includes(val), false)
+);
+
+const symptomsMap = (values) => {
+  if(_includesSymptoms(values, [
+    'breathing-problems', 'high-temperature'
+  ])) {
+    return .8;
+  } else if(_includesSymptoms(values, [
+    'sore-throat', 'exhaustion',
+  ])) {
+    return .6;
+  } else if(_includesSymptoms(values, [
+    'headache', 'limb-pain', 'chills',
+  ])) {
+    return .4;
+  } else if(_includesSymptoms(values, [
+    'sniff', 'diarrhea', 'loss-of-smell',
+  ])) {
+    return .2;
+  } else {
+    return 0;
+  }
+}
+
+const evalInfectionProbability = (metrics) => {
+  const {
+    cough,
+    fever,
+    symptoms,
+    proximity,
+    washHands,
+    washHandsDuration,
+    washHandsSoap,
+    riskyTravel,
+    symptomaticContact,
+    diagnosedContact,
+    criticalContact,
+  } = metrics;
+
+  const soapCoefficient = washHands ? (1 - .5*Number(washHandsSoap)) : 1,
+        durationCoefficient = washHands ? 1 - (.75*Math.log(washHandsDuration + 4) - 1) : 1;
+
+  const n = 7,
+        g = new Array(n).fill(0);
+  
+  g[0] = Number(cough);
+  g[1] = Number(fever);
+  g[2] = symptomsMap(symptoms);
+  g[3] = .6*Number(proximity);
+  g[4] = (.4 - .4*Number(washHands) + .4) * soapCoefficient * durationCoefficient;
+  g[5] = .75*Number(riskyTravel);
+
+  if(symptomaticContact) g[6] = .5;
+  if(diagnosedContact) g[6] = .75;
+  if(criticalContact) g[6] = 1;
+
+  return _scalarMult(1 / n, g).reduce((acc, val) => acc + val, 0);
+}
 
 const binaryAnswers = [
   { value: true, label: 'Ja' },
@@ -8,28 +76,41 @@ const binaryAnswers = [
 ];
 
 const handWashDurations = [
-  { value: 1, label: '0-5 Sekunden' },
-  { value: 2, label: '5-10 Sekunden' },
-  { value: 3, label: '10-15 Sekunden' },
-  { value: 4, label: '15-20 Sekunden' },
-  { value: 5, label: '>20 Sekunden' }
+  { value: 0, label: '0-5 Sekunden' },
+  { value: 1, label: '5-10 Sekunden' },
+  { value: 2, label: '10-15 Sekunden' },
+  { value: 3, label: '15-20 Sekunden' },
+  { value: 4, label: '>20 Sekunden' }
+];
+
+const symptomsCovid = [
+  { value: 'sore-throat', label: 'Halskratzen' },
+  { value: 'chills', label: 'Frösteln' },
+  { value: 'high-temperature', label: 'erhöhte Temperatur (>37,5)' },
+  { value: 'breathing-problems', label: 'Atemprobleme' },
+  { value: 'exhaustion', label: 'Abgeschlagenheit' },
+  { value: 'limb-pain', label: ' Glieder- oder Muskelschmerzen' },
+  { value: 'loss-of-smell', label: 'Geruchs- oder Geschmacksverlust' },
+  { value: 'diarrhea', label: 'Durchfall' },
+  { value: 'headache', label: 'Kopfschmerzen' },
+  { value: 'sniff', label: 'Schnupfen' },
 ];
 
 export default class CoronaSurvey extends Component {
   constructor() {
     super();
     this.state = {
-      cough: false,
-      fever: false,
-      symptoms: false,
-      proximity: false,
-      washHands: false,
+      cough: null,
+      fever: null,
+      symptoms: [],
+      proximity: null,
+      washHands: null,
       washHandsDuration: 0,
-      washHandsSoap: false,
-      riskyTravel: false,
-      symptomaticContact: false,
-      diagnosedContact: false,
-      criticalContact: false,
+      washHandsSoap: null,
+      riskyTravel: null,
+      symptomaticContact: null,
+      diagnosedContact: null,
+      criticalContact: null,
     }
   }
 
@@ -37,8 +118,16 @@ export default class CoronaSurvey extends Component {
     this.setState({ [metric]: value });
   }
 
+  setSymptoms = (metric, options) => {
+    if(metric === 'symptoms') {
+      this.setState({
+        symptoms: !!options ? options.map(o => o.value) : [],
+      });
+    }
+  }
+
   render() {
-    const { setMetric } = this;
+    const { state, setMetric, setSymptoms } = this;
     return(
       <div className="corona-survey">
         <CoronaSurveyHero /> 
@@ -54,9 +143,14 @@ export default class CoronaSurvey extends Component {
             </Question>
             <Question>
               Haben oder hatten Sie in den vergangenen zwei Wochen zusätzlich dazu eine oder mehrere der folgenden Symptome?
-              (Halskratzen, Frösteln, erhöhte Temperatur (>37,5), Atemprobleme, Durchfall, Abgeschlagenheit,
-              Glieder- oder Muskelschmerzen, Geruchs- oder Geschmacksverlust, Kopfschmerzen, Schnupfen.)
-              <Answer metric="symptoms" onChange={setMetric} />
+              Wenn ja, welche?
+              <Answer
+                metric="symptoms"
+                onChange={setSymptoms}
+                options={symptomsCovid}
+                multi={true}
+                closeMenuOnSelect={false}
+              />
             </Question>
           </SurveySlide>
           <SurveySlide>
@@ -71,7 +165,11 @@ export default class CoronaSurvey extends Component {
             </Question>
             <Question>
               Für wie lange waschen Sie sich die Hände?
-              <Answer metric="washHandsDuration" options={handWashDurations} onChange={setMetric} />
+              <Answer
+                metric="washHandsDuration"
+                options={handWashDurations}
+                onChange={setMetric}
+              />
             </Question>
             <Question>
               Verwenden Sie Seife?
@@ -104,10 +202,10 @@ export default class CoronaSurvey extends Component {
               Haben Sie aktuell oder hatten Sie in den vergangenen zwei Wochen Kontakt*
               zu einer Person, die schwer an COVID-19 erkrankt ist
               (labortechnisch festgestellt, mit Husten, Fieber und/oder Lungenentzündung)?
-              *Händeschütteln, Umarmen, von einem gemeinsamen Teller essen, Gegenstände berühren,
-              die die Infizierte Person auch berührt hat, weniger als 1,5 m Abstand.
               <Answer metric="criticalContact" onChange={setMetric} />
             </Question>
+            *Händeschütteln, Umarmen, von einem gemeinsamen Teller essen, Gegenstände berühren,
+            die die Infizierte Person auch berührt hat, weniger als 1,5 m Abstand.
           </SurveySlide>
           <SurveySlide>
             <div className="corona-survey__conclusion">
@@ -117,10 +215,12 @@ export default class CoronaSurvey extends Component {
               <p>
                 Die Wahrscheinlichkeit einer Infektion beträgt:
                 &nbsp;
-                {`${Math.random()*100}%`}
+                {`${percentageDisplay(evalInfectionProbability(state)*100)}%`}
               </p>
               <p style={{color: 'red'}}>
-                ACHTUNG: Das ist (noch) ein zufällig errechneter Wert dieses Prototyps!!!
+                ACHTUNG: Dies ist ein Prototyp!
+                Der errechnete Wert basiert auf einem
+                noch nicht bestätigten Modell.
               </p>
               <p>
                 Mit Hilfe der von Ihnen bereitgestellten Daten wird eine
@@ -144,14 +244,26 @@ const Question = ({ children }) => (
   <div className="corona-survey__question">{children}</div>
 );
 
-const Answer = ({ metric, onChange, options = binaryAnswers }) => (
-  <Select
-    className="corona-survey__answers"
-    name={metric}
-    options={options}
-    onChange={(option) => { onChange(metric, option) }}
-  />
-);
+const Answer = (props) => {
+  const {
+    metric,
+    onChange,
+    options = binaryAnswers,
+    multi = false,
+    closeMenuOnSelect = true,
+  } = props;
+  return(
+    <Select
+      className="corona-survey__answers"
+      name={metric}
+      isMulti={multi}
+      options={options}
+      onChange={(option) => { onChange(metric, option) }}
+      closeMenuOnSelect={closeMenuOnSelect}
+      placeholder={'Auswahl...'}
+    />
+  );
+}
 
 //------------
 
@@ -183,34 +295,40 @@ class Survey extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      totalSlides: this.props.children.length,
-    });
+    setTimeout(() => {
+      this.setState({
+        totalSlides: this.props.children.length,
+      });
+    }, 1500);
   }
 
   render() {
     const { props, state, prevSlide, nextSlide } = this;
     const { title, children } = props;
     const { totalSlides, currentSlide } = state;
-    // console.log(totalSlides);
     // TODO: Loading spinner while totalSLides <= 0
     return(
       <Fragment>
-        <h2>{title}</h2>
-        <div className="survey__step">
-          {currentSlide + 1} / <span>{totalSlides}</span>
-        </div>
-        <SurveyCaroussel>
-          {children.map((c, i) => (
-            <SurveySlideRender key={i} slideNumber={i} currentSlide={currentSlide}>
-              {c.props.children}
-            </SurveySlideRender>
-          ))}
-          <div className="survery-caroussel__controls">
-            <button onClick={prevSlide}>Zurück</button>
-            <button onClick={nextSlide}>Weiter</button>
+        {totalSlides > 0 ? <Fragment>
+          <h2>{title}</h2>
+          <div className="survey__step">
+            {currentSlide + 1} / <span>{totalSlides}</span>
           </div>
-        </SurveyCaroussel>
+          <SurveyCaroussel>
+            {children.map((c, i) => (
+              <SurveySlideRender key={i} slideNumber={i} currentSlide={currentSlide}>
+                {c.props.children}
+              </SurveySlideRender>
+            ))}
+            <div className="survery-caroussel__controls">
+              <button onClick={prevSlide}>Zurück</button>
+              <button onClick={nextSlide}>Weiter</button>
+            </div>
+          </SurveyCaroussel>
+        </Fragment>
+        :
+        <div className="corona-survey-loader-container"><CircularLoader /></div>
+        }
       </Fragment>
     );
   }

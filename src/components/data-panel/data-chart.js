@@ -4,7 +4,6 @@ import { isEqual } from 'lodash';
 import { dateDisplay } from '../../utilities/formatting';
 import theme from '../../theme/theme';
 
-// TODO: draw only filtered data
 const generateDataset = (label, data, color) => {
   return({
     label,

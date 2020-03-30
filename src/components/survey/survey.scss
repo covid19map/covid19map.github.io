@@ -35,6 +35,11 @@ $height-hero: 200px;
   text-align: center;
 }
 
+.corona-survey-loader-container {
+  @extend %flex-centering;
+  height: 350px;
+}
+
 //---------------
 
 .survey__step {

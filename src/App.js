@@ -5,13 +5,37 @@ import Dashboard from './Dashboard';
 import Navigation from './components/navigation/navigation';
 import Loader from './components/loader/loader';
 
+import { laboratoryDataMockup, surveyDataMockup } from './data-mockup';
+
 const __PROXY = 'https://cors-anywhere.herokuapp.com/';
-const getRecordedData = async () => {
+
+// TODO: refactor the two following function using a HOF
+const getLaboratoryData = async () => {
   // TODO: is there a better solution for the proxy / CORS situation?
   const res = await fetch(
     `${__PROXY}http://nodejs-express-app-yadii.eu-gb.mybluemix.net/getOfficialData`
   );
-  const data = await res.json();
+  let data;
+  try {
+    data = await res.json();
+  } catch(e) {
+    console.log(e);
+    data = laboratoryDataMockup;
+  }
+  return data;
+}
+
+const getSurveyData = async () => {
+  const res = await fetch(
+    `${__PROXY}http://nodejs-express-app-yadii.eu-gb.mybluemix.net/getSurveyData`
+  );
+  let data;
+  try {
+    data = await res.json();
+  } catch(e) {
+    console.log(e);
+    data = surveyDataMockup;
+  }
   return data;
 }
 
@@ -40,20 +64,27 @@ export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      data: {},
+      data: {
+        laboratory: {},
+        survey: {},
+      },
     }
   }
 
   async componentDidMount() {
-    const data = await trackPromise(getRecordedData());
-    this.setState({ data });
+    const laboratory = await trackPromise(getLaboratoryData());
+    const survey = await trackPromise(getSurveyData());
+    this.setState({
+      data: { laboratory, survey }
+    });
     console.log('Data recieved from server');
   }
 
   render() {
-    const { data } = this.state;
-    const timestamps = Object.keys(data);
-    const latestData = data[timestamps[timestamps.length - 1]];
+    const { data } = this.state,
+          { laboratory, survey } = data,
+          timestamps = Object.keys(laboratory),
+          latestData = laboratory[timestamps[timestamps.length - 1]];
     
     return(
       <Suspense fallback={<Loader />}>
@@ -61,8 +92,8 @@ export default class App extends Component {
           <DataLoadingIndicator />
           <Navigation />
           <Router>
-            {Object.keys(data).length > 0 &&
-              <Dashboard path="/" data={data} />
+            {Object.keys(laboratory).length > 0 &&
+              <Dashboard path="/" laboratory={laboratory} survey={survey} />
             }
             {latestData &&
               <DataTable path="/table" dataset={latestData} />

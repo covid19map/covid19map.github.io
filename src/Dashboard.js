@@ -4,18 +4,24 @@ import Select from 'react-select';
 import DiscreteSlider from './components/discrete-slider/discrete-slider';
 import DataMap from './components/data-map/data-map';
 import DataPanel from './components/data-panel/data-panel';
-import { filterPropValuePair } from './utilities/data-mutations';
+import { filterDataset, filterTimestampedData } from './utilities/data-mutations';
 import { dateDisplay } from './utilities/formatting';
-import { interfaceOutGeoJSON } from './utilities/interfaces';
+import {
+  intfcGeoPointsCondensed,
+  intfcGeoPointsSurvey,
+  intfcGeoAreasCountries,
+} from './utilities/interfaces';
 import './dashboard.css';
 
 //import __DATA__MOCKUP from './data-mockup';
 
-const __SATELLITE = 'satellite-v9';
-const __LIGHTMODE = 'light-v10';
+//const __SATELLITE = 'satellite-v9';
+//const __LIGHTMODE = 'light-v10';
 const __DARKMODE = 'dark-v10';
-const __STREETS = 'streets-v11';
+//const __STREETS = 'streets-v11';
 
+// Not in use yet
+/*
 const permuteMapStyles = (currentValue) => {
   switch(currentValue) {
     case __SATELLITE:
@@ -30,6 +36,7 @@ const permuteMapStyles = (currentValue) => {
       console.log(`Sorry, the style '${currentValue}' doesn't exist.`);
   }
 }
+*/
 
 export default class Dashboard extends Component {
   constructor() {
@@ -37,10 +44,15 @@ export default class Dashboard extends Component {
     this.state = {
       mapStyle: __DARKMODE,
       data: {
-        fetched: {},
-        filtered: {},
+        laboratory: {
+          fetched: {},
+          filtered: {},
+        },
+        survey: {
+          fetched: {},
+          filtered: {},
+        },
       },
-      survey: {},
       currentTime: 0,
       filteredRegions: [],
       chartsExpanded: false,
@@ -50,6 +62,8 @@ export default class Dashboard extends Component {
     this.mapNode = null;
   }
 
+  // Not in use yet
+  /*
   handleReload = () => {
     document.location.reload();
   }
@@ -58,18 +72,23 @@ export default class Dashboard extends Component {
     const { mapStyle } = this.state;
     this.setState({ mapStyle: permuteMapStyles(mapStyle) });
   }
+  */
 
   handleSetTime = (value) => {
-    const { data: {filtered} } = this.state;
-    const timestamps = Object.keys(filtered);
-    this.setState({ currentTime: Number(value) + Number(timestamps[0]) });
+    const { data } = this.state,
+          { laboratory } = data;
+    const timestamps = Object.keys(laboratory.filtered);
+    this.setState({
+      currentTime: Number(value) + Number(timestamps[0]),
+    });
   }
 
   // Not in use yet
   /*
   handleSetLive = () => {
-    const { data: {filtered} } = this.state;
-    const timestamps = Object.keys(filtered);
+    const { data } = this.state,
+          { laboratory } = data;
+    const timestamps = Object.keys(laboratory.filtered);
     // evaluate the closest timestamp to current time
     //const now = Date.now();
     //const D = timestamps.map(timestamp => Math.abs(timestamp - now));
@@ -103,15 +122,28 @@ export default class Dashboard extends Component {
 
   handleFilterCountries = (filteredRegions) => {
     this.setState({ filteredRegions });
-    let { data } = this.state;
-    const { fetched } = data;
+
+    const { data } = this.state,
+          { laboratory, survey } = data;
+
     if(!!filteredRegions && filteredRegions.length > 0) {
       // filtered regions come as an object { value: ..., label: ... }
       filteredRegions = filteredRegions.map(r => r.value);
-      data.filtered = filterPropValuePair(['province', 'country'], filteredRegions, fetched);
+      data.laboratory.filtered = filterTimestampedData(
+        ['province', 'country'],
+        filteredRegions,
+        laboratory.fetched,
+      );
+      data.survey.filtered = filterDataset(
+        ['province', 'country'],
+        filteredRegions,
+        survey.fetched,
+      );
     } else {
-      data.filtered = data.fetched;
+      data.laboratory.filtered = data.laboratory.fetched;
+      data.survey.filtered = data.survey.fetched;
     }
+
     this.setState({ data });
   }
 
@@ -122,38 +154,49 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount() {
-    const { data } = this.props;
-    const timestamps = Object.keys(data);
+    // Load data into state
+    // and set the current time to the latest possible date
+    const { laboratory, survey } = this.props;
+    const timestamps = Object.keys(laboratory);
     const currentTime = Number(timestamps[timestamps.length - 1]);
+
     this.setState({
       data: {
-        fetched: data,
-        filtered: data,
+        laboratory: {
+          fetched: laboratory,
+          filtered: laboratory,
+        },
+        survey: {
+          fetched: survey,
+          filtered: survey,
+        },
       },
       currentTime,
     });
     // Register all possible countries and regions
-    // While eliminating double entries and sort alphabetically
+    // Eliminate double entries from countries
     const __registeredCountries = [
-      ...new Set(data[currentTime].map(datapoint => datapoint.country).sort())
+      ...new Set(laboratory[currentTime].map(datapoint => datapoint.country).sort())
     ].map(
       region => ({ value: region, label: region })
     );
-    const __registeredProvinces = data[currentTime].map(
+    // Eliminate empty entries from provinces
+    const __registeredProvinces = laboratory[currentTime].map(
       datapoint => datapoint.province
     ).filter(
       province => !!province
     ).sort().map(
       region => ({ value: region, label: region })
     );
+    // Summarize into class object
     this.registeredRegions = [
       {
         label: "Countries",
-        options: __registeredCountries
+        options: __registeredCountries,
       },
       {
         label: "Provinces / States",
-        options: __registeredProvinces
+        options: __registeredProvinces,
       },
     ];
   }
@@ -172,35 +215,37 @@ export default class Dashboard extends Component {
     } = this;
     const {
       mapStyle,
-      data: {filtered},
-      //survey,
+      data,
       currentTime,
       filteredRegions,
       chartsExpanded,
       filtersExpanded,
     } = state;
+    const { laboratory, survey } = data;
   
-    const timestamps = Object.keys(filtered);
+    const timestamps = Object.keys(laboratory.filtered);
     const timeBegin = Number(timestamps[0]);
     const timeEnd = Number(timestamps[timestamps.length - 1]);
-    const geoData = interfaceOutGeoJSON(filtered[currentTime]);
     
     return(
       <Fragment>
-        {filtered && <DataPanel
-          data={filtered}
+        {!!laboratory.filtered && <DataPanel
+          data={laboratory.filtered}
           currentTime={currentTime}
           chartsExpanded={chartsExpanded}
           onToggleFilters={handleToggleFilters}
           onToggleCharts={handleToggleCharts}
         />}
         <div className="data-map-container" ref={e => this.mapNode = e}>
-          {geoData && <DataMap
-            data={geoData}
+          <DataMap
+            pointsSurvey={intfcGeoPointsSurvey(survey.filtered)}
+            pointsCondensed={intfcGeoPointsCondensed(laboratory.filtered[currentTime])}
+            areasCountries={intfcGeoAreasCountries(laboratory.filtered[currentTime])}
             container={mapNode}
             mapStyle={mapStyle}
             onClick={handleCollapseCharts}
-          />}
+            live={currentTime === timeEnd}
+          />
         </div>
         <Modal
           open={filtersExpanded}

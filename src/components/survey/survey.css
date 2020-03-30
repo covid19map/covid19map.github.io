@@ -13,7 +13,7 @@
   padding: 0;
 }
 
-.corona-survey, .survey-caroussel .survery-caroussel__controls {
+.corona-survey, .corona-survey-loader-container, .survey-caroussel .survery-caroussel__controls {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -91,6 +91,10 @@
 
 .corona-survey__conclusion {
   text-align: center;
+}
+
+.corona-survey-loader-container {
+  height: 350px;
 }
 
 .survey__step {

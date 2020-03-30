@@ -10,7 +10,6 @@ const __includesArray = (array, possiblities) => (
   !!array ? possiblities.map(p => array.includes(p)).reduce(__or, false) : true
 )
 
-// TODO: make function names more expressive
 // B.F. TODO: Add tests!
 
 const __condenseDataset = (prop, dataset) => (
@@ -25,7 +24,7 @@ export const condenseDataset = (props, dataset) => {
   }
 }
 
-export const condenseData = (props, data) => {
+export const condenseTimestampedData = (props, data) => {
   const r = {}
   Object.keys(data).forEach(t => {
     r[t] = condenseDataset(props, data[t])
@@ -33,7 +32,7 @@ export const condenseData = (props, data) => {
   return r;
 }
 
-const __filterProps = (props, dataset) => {
+export const filterKeys = (props, dataset) => {
   props = __ensureArray(props);
   return dataset.map(p => Object.keys(p)
     .filter(key => props.includes(key))
@@ -43,10 +42,10 @@ const __filterProps = (props, dataset) => {
     }, {}));
 }
 
-export const filterProps = (props, data) => {
+export const filterTimestampedKeys = (props, data) => {
   const r = {}
   Object.keys(data).forEach(t => {
-    r[t] = __filterProps(props, data[t])
+    r[t] = filterKeys(props, data[t])
   });
   return r;
 }
@@ -55,16 +54,16 @@ export const filterOrderedProps = (threshhold, data) => (
   Object.fromEntries(Object.entries(data).filter(x => x[0] <= threshhold))
 );
 
-const __filterPropValuePair = (props, values, dataset) => (
+export const filterDataset = (props, values, dataset) => (
   dataset.filter(
     p => __includesArray(values, __ensureArray(props).map(x => p[x]))
   )
 );
 
-export const filterPropValuePair = (props, values, data) => {
+export const filterTimestampedData = (props, values, data) => {
   const r = {}
   Object.keys(data).forEach(t => {
-    r[t] = __filterPropValuePair(props, values, data[t])
+    r[t] = filterDataset(props, values, data[t])
   });
   return r;
 }

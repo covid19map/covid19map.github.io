@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import DataChart from './data-chart';
 import { CircularLoader } from '../loader/loader';
-import { condenseData, filterOrderedProps } from '../../utilities/data-mutations';
+import { condenseTimestampedData, filterOrderedProps } from '../../utilities/data-mutations';
 import { bigIntegerDisplay, percentageDisplay } from '../../utilities/formatting';
 import './data-panel.css';
 
@@ -13,25 +13,31 @@ const DataPanel = (props) => {
     onToggleFilters,
     onToggleCharts,
   } = props;
+
   const isDataNotEmpty = !!Object.keys(data).length;
   let condensedDataCurrent, condensedDataConfined;
+
   if(isDataNotEmpty) {
-    const confirmedValues = condenseData('confirmed', data),
-          recoveredValues = condenseData('recovered', data),
-          deathsValues = condenseData('deaths', data);
+    const confirmedValues = condenseTimestampedData('confirmed', data),
+          recoveredValues = condenseTimestampedData('recovered', data),
+          deathsValues = condenseTimestampedData('deaths', data);
+
     condensedDataCurrent = {
       confirmed: confirmedValues[currentTime],
       recovered: recoveredValues[currentTime],
       deaths: deathsValues[currentTime],
     }
+
     condensedDataConfined = {
       confirmed: filterOrderedProps(currentTime, confirmedValues),
       recovered: filterOrderedProps(currentTime, recoveredValues),
       deaths: filterOrderedProps(currentTime, deathsValues),
     };
   }
-  const controlHandlers = { onToggleFilters, onToggleCharts }
+
+  const controlHandlers = { onToggleFilters, onToggleCharts, chartsExpanded }
   const clsCharts = `charts-container ${chartsExpanded ? 'expanded' : ''}`
+
   return(
     <Fragment>
       <div className="data-panel">
@@ -79,10 +85,10 @@ const DataPanelTiles = ({ confirmed, deaths, recovered }) => {
           Active cases: {bigIntegerDisplay(confirmed - deaths - recovered)}
         </div>
         <div>
-          Recovery rate: {`${percentageDisplay(recovered / confirmed * 100)}%`}
+          Recovery rate: {`${percentageDisplay(confirmed ? recovered / confirmed * 100 : 0)}%`}
         </div>
         <div>
-          Mortality rate: {`${percentageDisplay(deaths / confirmed * 100)}%`}
+          Mortality rate: {`${percentageDisplay(confirmed ? deaths / confirmed * 100 : 0)}%`}
         </div>
       </DataPanelTile>
     </Fragment>
@@ -99,13 +105,20 @@ const DataPanelTile = ({ cls, heading, children }) => {
   );
 }
 
-const DataPanelControls = ({ onToggleFilters, onToggleCharts }) => {
+const DataPanelControls = (props) => {
+  const {
+    onToggleFilters,
+    onToggleCharts,
+    chartsExpanded,
+  } = props;
+  const clsToggleCharts = `data-panel__controls__toggle-charts
+    ${chartsExpanded ? 'expanded' : ''}`;
   return(
     <div className="data-panel__controls">
       <span onClick={onToggleFilters}>
         <FilterIcon />
       </span>
-      <span onClick={onToggleCharts}>
+      <span className={clsToggleCharts} onClick={onToggleCharts}>
         <ArrowLeftIcon />
       </span>
     </div>

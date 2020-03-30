@@ -95,6 +95,15 @@ $data-panel-offset : $lenghts-navigation-offset;
       animation: scale-in .4s ease;
     }
   }
+
+  .data-panel__controls__toggle-charts {
+    transform: rotate(0);
+    transition: transform .25s cubic-bezier(.5,0,1,.75);
+
+    &.expanded {
+      transform: rotate(-180deg);
+    }
+  }
 }
 
 .charts-container {
