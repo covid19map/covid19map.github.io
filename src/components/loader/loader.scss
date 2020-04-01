@@ -148,3 +148,81 @@ $padding: .6rem;
   @include circular-loader;
 }
 
+@mixin elliptic-loader(
+  $width: 85px,
+  $height: 30px,
+  $latitude: 8px,
+  $animation-time: .75s,
+  $color: $color-primary
+) {
+  position: relative;
+  display: inline-block;
+  width: $width !important;
+  height: $height !important;
+  margin: 0 calc(50% - #{$width / 2});
+  text-align: center;
+  
+  span {
+    position: absolute;
+    top: #{ceil(($height - $latitude) / 2)};
+    width: $latitude;
+    height: $latitude;
+    border-radius: 50%;
+    background: $color;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    
+    &:nth-child(1) {
+      left: .1*$width - $latitude / 2;
+      animation: elliptic-loader-in $animation-time infinite;
+    }
+    
+    &:nth-child(2) {
+      left: .1*$width - $latitude / 2;
+      animation: elliptic-loader-move $animation-time infinite;
+    }
+    
+    &:nth-child(3) {
+      left: .5*$width - $latitude / 2;
+      animation: elliptic-loader-move $animation-time infinite;
+    }
+    
+    &:nth-child(4) {
+      left: .9*$width - $latitude / 2;
+      animation: elliptic-loader-out $animation-time infinite;
+    }
+    
+    @keyframes elliptic-loader-in {
+      to {
+        transform: scale(0);
+      }
+      
+      from {
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes elliptic-loader-out {
+      to {
+        transform: scale(1);
+      }
+      
+      from {
+        transform: scale(0);
+      }
+    }
+    
+    @keyframes elliptic-loader-move {
+      to {
+        transform: translate(0, 0);
+      }
+      
+      from {
+        transform: translate(floor(.4*$width - $latitude / 2), 0);
+      }
+    }
+  }
+}
+
+.elliptic-loader {
+  @include elliptic-loader;
+}

@@ -33,26 +33,17 @@ const DataMap = props => {
     zoom: 4,
   });
 
-  const mapStyleURI = `mapbox://styles/mapbox/${mapStyle}`;
-
-  /*
-  const clusterParams = {
-    cluster: true,
-    clusterMaxZoom: 14,
-    clusterRadius: 50,
-    clusterProperties: { 'cluster_count': ['+', ['case', ['get', 'confirmed'], 1, 0]] },
-  }
-  */
-
+  // TODO: add layer for immunized cluster
   return (
     <ReactMapGL
       {...viewport}
       container={container}
       onViewportChange={setViewport}
       mapboxApiAccessToken={MAPBOX_TOKEN}
-      mapStyle={mapStyleURI}
+      mapStyle={`mapbox://styles/mapbox/${mapStyle}`}
       onClick={onClick}
     >
+      {/* Add a prop to hide this level conditionally */}
       {true && <Source id="points-condensed" type="geojson" data={pointsCondensed}>
         <Layer {...confirmedLayer} />
         <Layer {...deathsLayer} />
@@ -62,7 +53,7 @@ const DataMap = props => {
       <Source id="areas-countries" type="geojson" data={areasCountries}>
         <Layer {...areasLayer} />
       </Source>
-      {/*Show only when data is live*/}
+      {/*Show this level only when data is live*/}
       {live && <Source id="points-survey" type="geojson" data={pointsSurvey} cluster={true}>
         <Layer {...surveyLayerClustered} />
         <Layer {...surveyLayerUnclustered} />

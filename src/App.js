@@ -1,6 +1,9 @@
 import React, { Suspense, lazy, Component } from 'react';
-import { Router } from "@reach/router";
+import { Router } from '@reach/router';
 import { trackPromise, usePromiseTracker } from 'react-promise-tracker';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { materialTheme } from './theme/theme';
+import styled from 'styled-components';
 import Dashboard from './Dashboard';
 import Navigation from './components/navigation/navigation';
 import Loader from './components/loader/loader';
@@ -18,9 +21,10 @@ const getLaboratoryData = async () => {
   let data;
   try {
     data = await res.json();
+    console.log('Received laboratory from server');
   } catch(e) {
-    console.log(e);
     data = laboratoryDataMockup;
+    console.error(e);
   }
   return data;
 }
@@ -32,15 +36,17 @@ const getSurveyData = async () => {
   let data;
   try {
     data = await res.json();
+    console.log('Received survey from server');
   } catch(e) {
-    console.log(e);
     data = surveyDataMockup;
+    console.error(e);
   }
   return data;
 }
 
-const __MIN__LOADINGTIME = 2000;
-const genLazyRoute = async (routeModule, timeMin = __MIN__LOADINGTIME) => {
+// Set to 2000 when not in mantainace;
+const _minLoadingTime = 0;
+const genLazyRoute = async (routeModule, timeMin = _minLoadingTime) => {
   return Promise.all([
     routeModule,
     new Promise(resolve => setTimeout(resolve, timeMin))
@@ -49,16 +55,24 @@ const genLazyRoute = async (routeModule, timeMin = __MIN__LOADINGTIME) => {
 
 //const Home = lazy(() => genLazyRoute(import('./components/home/home')));
 const DataTable = lazy(() => genLazyRoute(import('./components/data-table/data-table')));
-const Survey = lazy(() => genLazyRoute(import('./components/survey/survery')));
-//const Contact = lazy(() => genLazyRoute(import('./components/contact/contact')));
-//const Imprint = lazy(() => genLazyRoute(import('./components/imprint/imprint')));
+const Survey = lazy(() => genLazyRoute(import('./components/survey/survey')));
+const Contact = lazy(() => genLazyRoute(import('./components/contact/contact')));
+const Imprint = lazy(() => genLazyRoute(import('./components/imprint/imprint')));
 
 const DataLoadingIndicator = () => {
   const { promiseInProgress } = usePromiseTracker({
-    delay: __MIN__LOADINGTIME,
+    delay: _minLoadingTime,
   });
   return promiseInProgress && <Loader />;
 }
+
+const AppWrapper = styled.div`
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+`;
 
 export default class App extends Component {
   constructor() {
@@ -77,30 +91,33 @@ export default class App extends Component {
     this.setState({
       data: { laboratory, survey }
     });
-    console.log('Data recieved from server');
   }
 
   render() {
     const { data } = this.state,
           { laboratory, survey } = data,
           timestamps = Object.keys(laboratory),
-          latestData = laboratory[timestamps[timestamps.length - 1]];
+          latestLaboratoryData = laboratory[timestamps[timestamps.length - 1]];
     
     return(
       <Suspense fallback={<Loader />}>
-        <div className="app">
-          <DataLoadingIndicator />
-          <Navigation />
-          <Router>
-            {Object.keys(laboratory).length > 0 &&
-              <Dashboard path="/" laboratory={laboratory} survey={survey} />
-            }
-            {latestData &&
-              <DataTable path="/table" dataset={latestData} />
-            }
-            <Survey path="/survey" />
-          </Router>
-        </div>
+        <AppWrapper>
+          <ThemeProvider theme={materialTheme}>
+            <DataLoadingIndicator />
+            <Navigation />
+            <Router>
+              {timestamps.length > 0 &&
+                <Dashboard path="/" laboratory={laboratory} survey={survey} />
+              }
+              {!!latestLaboratoryData &&
+                <DataTable path="/table" dataset={latestLaboratoryData} />
+              }
+              <Survey path="/survey" />
+              <Contact path="/contact" />
+              <Imprint path="/imprint" />
+            </Router>
+          </ThemeProvider>
+        </AppWrapper>
       </Suspense>
     );
   }

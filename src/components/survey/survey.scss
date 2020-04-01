@@ -1,126 +1,157 @@
 @import '../../theme/theme';
 @import '../../theme/placeholders';
+@import '../../theme/animations';
 
-$height-hero: 200px;
-
-.corona-survey-hero {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: $height-hero;
-  background-image: linear-gradient($color-primary, $color-secondary);
-}
-
-.corona-survey {
+.survey {
   @extend %flex-centering;
-  @extend %full-viewport;
-  height: auto;
+  align-content: center;
   flex-wrap: wrap;
   box-sizing: border-box;
-  margin: $height-hero 0 0 0;
-  padding: 20px 15vw;
+  width: 60vw;
+  min-width: 300px;
+  max-width: 1200px;
+  height: 100%;
+  min-height: 600px;
+  margin: 50px auto;
+  padding: 25px;
+  background: darken($color-primary, 15%);
+  color: $color-light;
+  border-radius: $border-radius;
 
   h2 {
     width: 100%;
+    margin: 50px auto;
+    font-size: 24px;
+    text-align: center;
   }
-}
 
-.corona-survey__question, .corona-survey__answers {
-  width: 75%;
-  margin: 20px auto;
-}
-
-.corona-survey__conclusion {
-  text-align: center;
-}
-
-.corona-survey-loader-container {
-  @extend %flex-centering;
-  height: 350px;
-}
-
-//---------------
-
-.survey__step {
-  width: 100%;
-  margin: 20px auto;
-  text-align: right;
-  font-size: 13px;
-  font-weight: 900;
-  color: $color-primary;
-
-  span {
-    display: inline-block;
-    font-size: 18px;
-    font-weight: 350;
-    transform: translate(0, 5px);
-  }
-}
-
-.survey-caroussel {
-  $button-height: 45px;
-  $button-offset: 20px;
-  position: relative;
-  width: 100%;
-  min-height: 67vh;
-
-  .survey-slide-render {
-    position: absolute;
-    top: 0;
-    left: 0;
-    box-sizing: border-box;
+  h3 {
     width: 100%;
-    height: 100%;
-    opacity: 0;
-    z-index: -1;
-    transform: scale(1, 0);
-    transition: transform .25s ease-out, opacity .4s ease;
-  
-    &.visible {
-      opacity: 1;
-      z-index: 1;
-      transform: scale(1, 1);
+    margin: 30px auto;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  div {
+    width: 100%;
+  }
+
+  button {
+    box-sizing: border-box;
+    margin: 25px;
+    padding: 15px 25px;
+    background: $color-secondary;
+    color: $color-dark;
+    border: none;
+    border-radius: .5*$border-radius;
+    font-weight: 750;
+    transition: background .33s ease;
+    cursor: pointer;
+
+    &:hover {
+      background: lighten($color-secondary, 10%);
+      animation: scale-in .2s ease;
     }
   }
+}
 
-  .survey-slide-render__inner {
-    position: relative;
+.survey__landing {
+  text-align: center;
+
+  div {
+    margin: 50px auto;
+  }
+}
+
+@keyframes survey-form-in {
+  from {
+    transform: scale(1, 0);
+  }
+
+  to {
+    transform: scale(1, 1);
+  }
+}
+
+.survey__form {
+  width: 100%;
+  transform: scale(1, 0);
+  animation: survey-form-in .4s ease forwards;
+}
+
+.survey__form__input {
+  position: relative;
+  max-width: 450px;
+  margin: 20px auto;
+
+  input {
     box-sizing: border-box;
     width: 100%;
-    height: calc(100% - #{$button-height + 4*$button-offset});
-    overflow: auto;
+    padding: 12.5px 10px;
+    margin: 6px 0 12px;
+    border: 2px solid transparent;
+    border-radius: .5*$border-radius;
+    outline: none;
+    font-weight: 600;
+    color: $color-dark;
 
-    @extend %scrollbar;
-  }
-  
-  .survery-caroussel__controls {
-    @extend %flex-centering;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px 0;
-    z-index: 2;
-  
-    button {
-      min-width: 150px;
-      height: $button-height;
-      margin: $button-offset;
-      padding: 0 10px;
-      font: inherit;
-      font-weight: 650;
-      color: $color-light;
-      background: $color-primary;
-      border: none;
-      border-radius: 12px;
-      outline: none;
-      cursor: pointer;
-      transition: background .4s ease;
+    &:focus {
+      border-color: $color-dark;
 
-      &:hover {
-        background: lighten($color-primary, 10%);
+      & ~ label {
+        letter-spacing: 2px;
       }
     }
   }
+
+  label {
+    position: absolute;
+    top: -10px;
+    left: 0;
+    font-size: 11px;
+    font-weight: 550;
+    text-transform: uppercase;
+    color: $color-light;
+    pointer-events: none;
+    transition: letter-spacing .3s ease-in;
+  }
+}
+
+@keyframes survey-register-progress-in {
+  0% {
+    transform: scale(1, 0);
+    color: transparent;
+  }
+
+  50% {
+    transform: scale(1, 1);
+    color: transparent;
+  }
+
+  100% {
+    transform: scale(1, 1);
+    color: $color-dark;
+  }
+}
+
+.survey__register__progress {
+  @extend %flex-centering;
+  box-sizing: border-box;
+  padding: 20px;
+  margin: 20px;
+  background: $color-light;
+  color: transparent;
+  border: none;
+  border-radius: .75*$border-radius;
+  overflow: hidden;
+  transform: scale(1, 0);
+  animation: survey-register-progress-in .4s ease forwards;
+}
+
+.survey__register__notes {
+  font-size: 10px;
+}
+
+.survey__login__reset {
+  text-align: center;
 }

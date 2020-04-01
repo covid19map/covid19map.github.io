@@ -1,3 +1,5 @@
+import { createMuiTheme } from '@material-ui/core/styles';
+
 const theme = {
   base: '16px',
   spacing: '1rem',
@@ -38,3 +40,22 @@ const theme = {
 }
 
 export default theme;
+
+export const materialTheme = createMuiTheme({
+  typography: {
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      theme.typography.font.sans,
+      '"Segoe UI"',
+    ].join(','),
+  },
+  palette: {
+    primary: {
+      main: theme.color.dark,
+    },
+    secondary: {
+      main: theme.color.primary,
+    },
+  },
+});

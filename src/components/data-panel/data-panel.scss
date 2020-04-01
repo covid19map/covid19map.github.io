@@ -80,7 +80,8 @@ $data-panel-offset : $lenghts-navigation-offset;
 .data-panel__controls {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  @extend %space-evenly-substitute;
+  //justify-content: space-evenly;
   width: 100%;
 
   svg {
@@ -98,7 +99,7 @@ $data-panel-offset : $lenghts-navigation-offset;
 
   .data-panel__controls__toggle-charts {
     transform: rotate(0);
-    transition: transform .25s cubic-bezier(.5,0,1,.75);
+    transition: transform .33s cubic-bezier(.5,0,1,.75);
 
     &.expanded {
       transform: rotate(-180deg);

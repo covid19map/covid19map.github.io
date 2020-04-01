@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from "@reach/router"
+import { Link } from '@reach/router';
 import './navigation.css';
 
 export default class Navigation extends Component {

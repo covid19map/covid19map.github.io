@@ -67,8 +67,10 @@
   position: relative;
   width: 100vw;
   height: 250px;
+  background: #6d9197;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#628389), to(#d1d8cf));
   background-image: linear-gradient(#628389, #d1d8cf);
+  border-radius: 0 0 20px 20px;
 }
 
 .data-table-container {

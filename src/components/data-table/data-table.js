@@ -44,6 +44,7 @@ export default class DataTable extends Component {
   onClickProp = (e) => {
     const { prop } = e.target.dataset,
           { sortProp, sortAscending } = this.state;
+          
     if(!!prop) {
       if(prop === sortProp) {
         sortAscending[prop] = !sortAscending[prop];

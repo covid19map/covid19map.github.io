@@ -28,7 +28,7 @@ export const laboratoryDataMockup = {
       active: 20,
     }
   ],
-  1584820800000: [
+  1584820586400: [
     {
       province: 'Auenland',
       country: 'Eriador',
@@ -57,7 +57,7 @@ export const laboratoryDataMockup = {
       active: 20,
     }
   ],
-  1584820813832: [
+  1584820672800: [
     {
       province: 'Auenland',
       country: 'Eriador',

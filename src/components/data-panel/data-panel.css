@@ -18,6 +18,17 @@
           justify-content: center;
 }
 
+.data-panel__controls {
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.data-panel__controls:before, .data-panel__controls:after {
+  content: '';
+  display: block;
+}
+
 @-webkit-keyframes scale-in {
   0%, 100% {
     -webkit-transform: scale(1);
@@ -125,9 +136,6 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
   width: 100%;
 }
 
@@ -147,10 +155,10 @@
 .data-panel__controls .data-panel__controls__toggle-charts {
   -webkit-transform: rotate(0);
           transform: rotate(0);
-  -webkit-transition: -webkit-transform 0.25s cubic-bezier(0.5, 0, 1, 0.75);
-  transition: -webkit-transform 0.25s cubic-bezier(0.5, 0, 1, 0.75);
-  transition: transform 0.25s cubic-bezier(0.5, 0, 1, 0.75);
-  transition: transform 0.25s cubic-bezier(0.5, 0, 1, 0.75), -webkit-transform 0.25s cubic-bezier(0.5, 0, 1, 0.75);
+  -webkit-transition: -webkit-transform 0.33s cubic-bezier(0.5, 0, 1, 0.75);
+  transition: -webkit-transform 0.33s cubic-bezier(0.5, 0, 1, 0.75);
+  transition: transform 0.33s cubic-bezier(0.5, 0, 1, 0.75);
+  transition: transform 0.33s cubic-bezier(0.5, 0, 1, 0.75), -webkit-transform 0.33s cubic-bezier(0.5, 0, 1, 0.75);
 }
 
 .data-panel__controls .data-panel__controls__toggle-charts.expanded {

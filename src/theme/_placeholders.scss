@@ -58,3 +58,15 @@
     */
   }
 }
+
+// "Polyfills"
+
+%space-evenly-substitute {
+  justify-content: space-between;
+
+  &:before,
+  &:after {
+    content: '';
+    display: block;
+  }
+}

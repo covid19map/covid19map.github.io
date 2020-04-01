@@ -23,4 +23,15 @@ export const CircularLoader = () => {
   );
 }
 
+export const EllipticLoader = () => {
+  return(
+    <div className="elliptic-loader">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  );
+}
+
 export default MainLoader;

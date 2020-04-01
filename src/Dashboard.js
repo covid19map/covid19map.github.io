@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import Modal from 'react-responsive-modal';
 import Select from 'react-select';
-import DiscreteSlider from './components/discrete-slider/discrete-slider';
+import Slider from '@material-ui/core/Slider';
+import Tooltip from '@material-ui/core/Tooltip';
 import DataMap from './components/data-map/data-map';
 import DataPanel from './components/data-panel/data-panel';
 import { filterDataset, filterTimestampedData } from './utilities/data-mutations';
@@ -37,6 +38,16 @@ const permuteMapStyles = (currentValue) => {
   }
 }
 */
+
+const TimeLabel = ({ children, open, value }) => {
+  value = dateDisplay(new Date(value));
+
+  return (
+    <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
+      {children}
+    </Tooltip>
+  );
+}
 
 export default class Dashboard extends Component {
   constructor() {
@@ -74,14 +85,11 @@ export default class Dashboard extends Component {
   }
   */
 
-  handleSetTime = (value) => {
-    const { data } = this.state,
-          { laboratory } = data;
-    const timestamps = Object.keys(laboratory.filtered);
+  setTime = (event, value) => {
     this.setState({
-      currentTime: Number(value) + Number(timestamps[0]),
+      currentTime: value,
     });
-  }
+  };
 
   // Not in use yet
   /*
@@ -147,12 +155,6 @@ export default class Dashboard extends Component {
     this.setState({ data });
   }
 
-  setTime = (unixtime) => {
-    this.setState({
-      currentTime: unixtime,
-    });
-  }
-
   componentDidMount() {
     // Load data into state
     // and set the current time to the latest possible date
@@ -175,13 +177,13 @@ export default class Dashboard extends Component {
     });
     // Register all possible countries and regions
     // Eliminate double entries from countries
-    const __registeredCountries = [
+    const _registeredCountries = [
       ...new Set(laboratory[currentTime].map(datapoint => datapoint.country).sort())
     ].map(
       region => ({ value: region, label: region })
     );
     // Eliminate empty entries from provinces
-    const __registeredProvinces = laboratory[currentTime].map(
+    const _registeredProvinces = laboratory[currentTime].map(
       datapoint => datapoint.province
     ).filter(
       province => !!province
@@ -192,11 +194,11 @@ export default class Dashboard extends Component {
     this.registeredRegions = [
       {
         label: "Countries",
-        options: __registeredCountries,
+        options: _registeredCountries,
       },
       {
         label: "Provinces / States",
-        options: __registeredProvinces,
+        options: _registeredProvinces,
       },
     ];
   }
@@ -207,7 +209,7 @@ export default class Dashboard extends Component {
       mapNode,
       registeredRegions,
       handleFilterCountries,
-      handleSetTime,
+      setTime,
       handleToggleCharts,
       handleCollapseCharts,
       handleToggleFilters,
@@ -229,13 +231,15 @@ export default class Dashboard extends Component {
     
     return(
       <Fragment>
-        {!!laboratory.filtered && <DataPanel
-          data={laboratory.filtered}
-          currentTime={currentTime}
-          chartsExpanded={chartsExpanded}
-          onToggleFilters={handleToggleFilters}
-          onToggleCharts={handleToggleCharts}
-        />}
+        {!!laboratory.filtered &&
+          <DataPanel
+            data={laboratory.filtered}
+            currentTime={currentTime}
+            chartsExpanded={chartsExpanded}
+            onToggleFilters={handleToggleFilters}
+            onToggleCharts={handleToggleCharts}
+          />
+        }
         <div className="data-map-container" ref={e => this.mapNode = e}>
           <DataMap
             pointsSurvey={intfcGeoPointsSurvey(survey.filtered)}
@@ -266,13 +270,16 @@ export default class Dashboard extends Component {
             onChange={handleFilterCountries}
           />
           <div className="filter-label">Time</div>
-          <DiscreteSlider
-            min={0}
-            max={timeEnd - timeBegin}
-            availableValues={timestamps.map(t => t - timeBegin)}
-            startValue={currentTime - timeBegin}
-            onChange={handleSetTime}
-            formatValue={(v) => dateDisplay(new Date(v + Number(timeBegin)))}
+          <Slider
+            min={timeBegin}
+            max={timeEnd}
+            step={null}
+            marks={timestamps.map(t => ({ value: t }))}
+            valueLabelDisplay="off"
+            ValueLabelComponent={TimeLabel}
+            aria-label="select time"
+            value={currentTime}
+            onChange={setTime}
           />
         </Modal>
         {!(currentTime === 0 || currentTime === timeEnd || filtersExpanded) &&

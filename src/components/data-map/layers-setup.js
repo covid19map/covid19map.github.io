@@ -102,9 +102,9 @@ export const surveyLayerClustered = {
   paint: {
     'circle-color': ['step',
       ['get', 'point_count'],
-      '#490C90',
-      100, '#840C90',
-      750, '#900C36',
+      '#555',
+      100, '#333',
+      750, theme.color.dark,
     ],
     'circle-radius': ['step',
       ['get', 'point_count'],
