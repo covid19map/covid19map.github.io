@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from '@reach/router';
+import { ReactComponent as DashboardIcon } from './dashboard.svg';
 import './navigation.css';
 
 export default class Navigation extends Component {
@@ -49,11 +50,11 @@ export default class Navigation extends Component {
         <nav className={clsNav}>
           <div className="navigation__brand">Corona<span>hub</span></div>
           <NavList onClose={handleCollapse}>
-            <NavLink to="/"><HomeIcon /> Home</NavLink>
-            <NavLink to="/table"><TableIcon /> Table</NavLink>
-            <NavLink to="/survey"><SurveyIcon /> Survey</NavLink>
-            <NavLink to="/contact"><ContactIcon /> Contact</NavLink>
-            <NavLink to="/imprint"><ImprintIcon /> Imprint</NavLink>
+            <NavLink to="/dashboard"><DashboardIcon />Dashboard</NavLink>
+            <NavLink to="/table"><TableIcon />Table</NavLink>
+            <NavLink to="/survey"><SurveyIcon />Survey</NavLink>
+            <NavLink to="/contact"><ContactIcon />Contact</NavLink>
+            <NavLink to="/imprint"><ImprintIcon />Imprint</NavLink>
           </NavList>
         </nav>
       </Fragment>
@@ -62,7 +63,7 @@ export default class Navigation extends Component {
 }
 
 const __setActive = ({ isCurrent }) => {
-  return isCurrent ? { className: "active" } : {}
+  return isCurrent ? { className: 'active' } : {}
 }
 
 const NavList = ({ onClose, children }) => {
