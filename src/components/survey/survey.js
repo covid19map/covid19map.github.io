@@ -3,6 +3,7 @@ import SurveyQuestionnaire from './survey-questionnaire/survey-questionnaire';
 import SurveyDashboard from './survey-dashboard/survey-dashboard';
 import { EllipticLoader } from '../loader/loader';
 import { evalInfectionProbability } from './survey-eval';
+import { stripHTML } from '../../utilities/validate';
 import './survey.css';
 
 export const binaryAnswers = [
@@ -156,12 +157,19 @@ export default class Survey extends Component {
 
   postRegisterCredentials = () => {
     const { credentials } = this.state,
-          { register } = credentials;
+          { register } = credentials,
+          { id, email, password, zip } = register;
     
+    // Sanitize credentials
+    console.log({
+      id: stripHTML(id),
+      email: stripHTML(email),
+      password: stripHTML(password),
+      zip: stripHTML(zip),
+    });
     // Validate credentials
     //if() {
     // POST to server
-      console.log(register);
       this.setState({
         registerPending: true,
       });
@@ -190,14 +198,16 @@ export default class Survey extends Component {
 
   postLoginCredentials = () => {
     const { credentials } = this.state,
-          { login } = credentials;
+          { login } = credentials,
+          { user, password } = login;
     
-    // Validate credentials
+    // Sanitize credentials
+    console.log({ user: stripHTML(user), password: stripHTML(password)});
+    // Validate ceredentials
     //if() {
     // POST to server
-      console.log(login);
       const response = {
-        id: login.user,
+        id: user,
         metrics: {
           cough: true,
           fever: false,

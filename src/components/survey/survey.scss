@@ -14,7 +14,9 @@
   min-height: 600px;
   margin: 50px auto;
   padding: 25px;
-  background: darken($color-primary, 15%);
+  //background: darken($color-primary, 15%);
+  background: rgb(53,83,101);
+  //background: linear-gradient(138deg, rgba(53,83,101,1) 25%, rgba(135,164,163,1) 75%);
   color: $color-light;
   border-radius: $border-radius;
 
@@ -75,45 +77,58 @@
 
 .survey__form {
   width: 100%;
+  background: inherit;
+  //mix-blend-mode: color;
   transform: scale(1, 0);
   animation: survey-form-in .4s ease forwards;
 }
 
 .survey__form__input {
+  $height: 50px;
   position: relative;
   max-width: 450px;
   margin: 20px auto;
+  background: inherit;
 
   input {
     box-sizing: border-box;
     width: 100%;
-    padding: 12.5px 10px;
+    height: $height;
+    padding: 0 10px;
     margin: 6px 0 12px;
-    border: 2px solid transparent;
+    border: 2px solid $color-light;
     border-radius: .5*$border-radius;
     outline: none;
+    background: inherit;
     font-weight: 600;
-    color: $color-dark;
+    color: $color-light;
 
-    &:focus {
-      border-color: $color-dark;
+    &:focus, &[value]:not([value=""]) {
+      border-color: $color-tertiary;
 
       & ~ label {
-        letter-spacing: 2px;
+        top: 0;
+        transform: translate(0, 0);
       }
     }
   }
 
   label {
     position: absolute;
-    top: -10px;
-    left: 0;
+    top: 50%;
+    left: 10px;
+    padding: 0 4px;
+    border-radius: 2px;
+    background: inherit;
     font-size: 11px;
     font-weight: 550;
     text-transform: uppercase;
     color: $color-light;
     pointer-events: none;
-    transition: letter-spacing .3s ease-in;
+    transform: translate(0, -75%);
+    transition: top, transform;
+    transition-duration: .2s;
+    transition-timing-function: ease;
   }
 }
 
@@ -150,6 +165,8 @@
 
 .survey__register__notes {
   font-size: 10px;
+  mix-blend-mode: screen;
+  mix-blend-mode: color-dodge;
 }
 
 .survey__login__reset {

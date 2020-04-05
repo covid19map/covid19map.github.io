@@ -54,7 +54,7 @@
   min-height: 600px;
   margin: 50px auto;
   padding: 25px;
-  background: #4c676b;
+  background: #355365;
   color: #dee1dd;
   border-radius: 20px;
 }
@@ -130,6 +130,7 @@
 
 .survey__form {
   width: 100%;
+  background: inherit;
   -webkit-transform: scale(1, 0);
           transform: scale(1, 0);
   -webkit-animation: survey-form-in .4s ease forwards;
@@ -140,40 +141,56 @@
   position: relative;
   max-width: 450px;
   margin: 20px auto;
+  background: inherit;
 }
 
 .survey__form__input input {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   width: 100%;
-  padding: 12.5px 10px;
+  height: 50px;
+  padding: 0 10px;
   margin: 6px 0 12px;
-  border: 2px solid transparent;
+  border: 2px solid #dee1dd;
   border-radius: 10px;
   outline: none;
+  background: inherit;
   font-weight: 600;
-  color: #28364d;
+  color: #dee1dd;
 }
 
-.survey__form__input input:focus {
-  border-color: #28364d;
+.survey__form__input input:focus, .survey__form__input input[value]:not([value=""]) {
+  border-color: #99aead;
 }
 
-.survey__form__input input:focus ~ label {
-  letter-spacing: 2px;
+.survey__form__input input:focus ~ label, .survey__form__input input[value]:not([value=""]) ~ label {
+  top: 0;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
 }
 
 .survey__form__input label {
   position: absolute;
-  top: -10px;
-  left: 0;
+  top: 50%;
+  left: 10px;
+  padding: 0 4px;
+  border-radius: 2px;
+  background: inherit;
   font-size: 11px;
   font-weight: 550;
   text-transform: uppercase;
   color: #dee1dd;
   pointer-events: none;
-  -webkit-transition: letter-spacing .3s ease-in;
-  transition: letter-spacing .3s ease-in;
+  -webkit-transform: translate(0, -75%);
+          transform: translate(0, -75%);
+  -webkit-transition: top, -webkit-transform;
+  transition: top, -webkit-transform;
+  transition: top, transform;
+  transition: top, transform, -webkit-transform;
+  -webkit-transition-duration: .2s;
+          transition-duration: .2s;
+  -webkit-transition-timing-function: ease;
+          transition-timing-function: ease;
 }
 
 @-webkit-keyframes survey-register-progress-in {
@@ -230,6 +247,8 @@
 
 .survey__register__notes {
   font-size: 10px;
+  mix-blend-mode: screen;
+  mix-blend-mode: color-dodge;
 }
 
 .survey__login__reset {

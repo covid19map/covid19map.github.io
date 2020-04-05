@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import theme from '../../theme/theme';
+import { ReactComponent as LogoHackathon } from './logo-hackathon.svg';
 
 const Container = styled.div`
   box-sizing: border-box;
@@ -50,7 +51,10 @@ const Copyright = styled.div`
   }
 `;
 
-const Paragraph = styled.div``;
+const Paragraph = styled.div`
+  margin: 6px 0;
+  text-align: ${props => props.center ? 'center' : 'left'};
+`;
 
 function Imprint() {
   return(
@@ -60,7 +64,16 @@ function Imprint() {
         Ruben Giannotti // Pappelallee 78/79 // 10437 Berlin
       </Address>
       <Copyright>Ruben Giannotti, Oskar Schlösinger, Max Schlösinger, Patrick Remmler 2020</Copyright>
-      <SubTitle>Haftunsausschluss</SubTitle>
+      <Paragraph>
+        Enstanden im Rahmen des #WirVsVirus Hackathons.
+      </Paragraph>
+      <Paragraph center>
+        <LogoHackathon style={{
+          width: '60%',
+          height: 'auto',
+        }}/>
+      </Paragraph>
+      <SubTitle>Haftungsausschluss</SubTitle>
       <Paragraph>
         Der Autor übernimmt, obgleich die Inhalte dieser Seite mit größter Sorgfalt ausgewählt wurden,
         keinerlei Gewähr für dessen Aktualität, Richtigkeit oder Vollständigkeit.

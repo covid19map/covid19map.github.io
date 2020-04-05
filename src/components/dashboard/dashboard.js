@@ -1,17 +1,18 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState, useEffect, useContext, useRef } from 'react';
+import DataContext from '../../context/data-context';
 import Modal from 'react-responsive-modal';
 import Select from 'react-select';
 import Slider from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
-import DataMap from './components/data-map/data-map';
-import DataPanel from './components/data-panel/data-panel';
-import { filterDataset, filterTimestampedData } from './utilities/data-mutations';
-import { dateDisplay } from './utilities/formatting';
+import DataMap from '../data-map/data-map';
+import DataPanel from '../data-panel/data-panel';
+import { filterDataset, filterTimestampedData } from '../../utilities/data-mutations';
+import { dateDisplay } from '../../utilities/formatting';
 import {
   intfcGeoPointsCondensed,
   intfcGeoPointsSurvey,
   intfcGeoAreasCountries,
-} from './utilities/interfaces';
+} from '../../utilities/interfaces';
 import './dashboard.css';
 
 //import __DATA__MOCKUP from './data-mockup';
@@ -23,8 +24,8 @@ const __DARKMODE = 'dark-v10';
 
 // Not in use yet
 /*
-const permuteMapStyles = (currentValue) => {
-  switch(currentValue) {
+const permuteMapStyles = (currentStyle) => {
+  switch(currentStyle) {
     case __SATELLITE:
       return __LIGHTMODE;
     case __LIGHTMODE:
@@ -34,21 +35,202 @@ const permuteMapStyles = (currentValue) => {
     case __STREETS:
       return __SATELLITE;
     default:
-      console.log(`Sorry, the style '${currentValue}' doesn't exist.`);
+      console.log(`Sorry, the style '${currentStyle}' doesn't exist.`);
+      return __DARKMODE;
   }
 }
 */
 
+const registerRegions = (currentData) => {
+  // Eliminate double entires from countries
+  const _registeredCountries = [
+    ...new Set(currentData.map(datapoint => datapoint.country).sort())
+  ].map(
+    region => ({ value: region, label: region })
+  );
+  // Eliminate empty entries from provinces
+  const _registeredProvinces = currentData.map(
+    datapoint => datapoint.province
+  ).filter(
+    province => !!province
+  ).sort().map(
+    region => ({ value: region, label: region })
+  );
+  // Summarize into class object
+  return [
+    {
+      label: "Countries",
+      options: _registeredCountries,
+    },
+    {
+      label: "Provinces / States",
+      options: _registeredProvinces,
+    },
+  ];
+}
+
+// TODO: Refactor as a reducer
+const filterRegions = (regions, data, onUpdateRegions, onUpdateData) => {
+  onUpdateRegions(regions);
+
+  if(!!regions && regions.length > 0) {
+    // filtered regions come as an object { value: ..., label: ... }
+    regions = regions.map(r => r.value);
+    data.laboratory.filtered = filterTimestampedData(
+      ['province', 'country'],
+      regions,
+      data.laboratory.fetched,
+    );
+    data.survey.filtered = filterDataset(
+      ['province', 'country'],
+      regions,
+      data.survey.fetched,
+    );
+  } else {
+    data.laboratory.filtered = data.laboratory.fetched;
+    data.survey.filtered = data.survey.fetched;
+  }
+
+  onUpdateData(data);
+}
+
 const TimeLabel = ({ children, open, value }) => {
   value = dateDisplay(new Date(value));
-
-  return (
+  return(
     <Tooltip open={open} enterTouchDelay={0} placement="top" title={value}>
       {children}
     </Tooltip>
   );
 }
 
+function Dashboard() {
+  //const [mapStyle, setMapStyle] = useState(__DARKMODE);
+  const mapStyle = __DARKMODE;
+  const [data, setData] = useState({});
+  const [time, setTime] = useState(0);
+  const [timestamps, setTimestamps] = useState([]);
+  const [registeredRegions, setRegisteredRegions] = useState([]);
+  const [filteredRegions, setFilteredRegions] = useState([]);
+  const [widgets, setWidgets] = useState({
+    chartsExpanded: false,
+    filtersExpanded: false,
+  });
+  const mapNode = useRef();
+  const _data = useContext(DataContext);
+
+  useEffect(() => {
+    const _timestamps = Object.keys(_data.laboratory);
+    if(_timestamps.length > 0) {
+      const currentData = Object.values(_data.laboratory).slice(-1)[0];
+      setRegisteredRegions(registerRegions(currentData));
+      setTimestamps(_timestamps);
+      setTime(_timestamps.slice(-1)[0]);
+      setData({
+        laboratory: {
+          filtered: _data.laboratory,
+          fetched: _data.laboratory,
+        },
+        survey: {
+          filtered: _data.survey,
+          fetched: _data.survey,
+        }
+      });
+    }
+  }, [_data]);
+
+  const handleToggleCharts = () => {
+    setWidgets({
+      ...widgets,
+      chartsExpanded: !widgets.chartsExpanded,
+    });
+  }
+
+  const handleCollapseCharts = () => {
+    setWidgets({
+      ...widgets,
+      chartsExpanded: false,
+    });
+  }
+
+  const handleToggleFilters = () => {
+    setWidgets({
+      ...widgets,
+      filtersExpanded: !widgets.filtersExpanded,
+    });
+  }
+
+  const handleCollapseFilters = () => {
+    setWidgets({
+      ...widgets,
+      filtersExpanded: false,
+    });
+  }
+
+  return(
+    <Fragment>
+      {timestamps.length > 0 && <Fragment>
+        <DataPanel
+          data={data.laboratory.filtered}
+          currentTime={time}
+          chartsExpanded={widgets.chartsExpanded}
+          onToggleFilters={handleToggleFilters}
+          onToggleCharts={handleToggleCharts}
+        />
+        <div className="data-map-container" ref={mapNode}>
+          <DataMap
+            pointsSurvey={intfcGeoPointsSurvey(data.survey.filtered)}
+            pointsCondensed={intfcGeoPointsCondensed(data.laboratory.filtered[time])}
+            areasCountries={intfcGeoAreasCountries(data.laboratory.filtered[time])}
+            container={mapNode}
+            mapStyle={mapStyle}
+            onClick={handleCollapseCharts}
+            live={time === timestamps.slice(-1)[0]}
+          />
+        </div>
+        <Modal
+          open={widgets.filtersExpanded}
+          onClose={handleCollapseFilters}
+          classNames={{
+            modal: 'modal-filters',
+            overlay: 'modal-filters-overlay'
+          }}
+          center
+        >
+          <h2>Data filters</h2>
+          <div className="filter-label">Region</div>
+          <Select
+            isMulti
+            name="countries"
+            options={registeredRegions}
+            defaultValue={filteredRegions}
+            onChange={(regions) => filterRegions(regions, data, setFilteredRegions, setData)}
+          />
+          <div className="filter-label">Time</div>
+          <Slider
+            min={Number(timestamps[0])}
+            max={Number(timestamps.slice(-1)[0])}
+            step={null}
+            marks={timestamps.map(t => ({ value: t }))}
+            valueLabelDisplay="off"
+            ValueLabelComponent={TimeLabel}
+            aria-label="select time"
+            value={Number(time)}
+            onChange={(e, value) => setTime(value)}
+          />
+        </Modal>
+        {!(time === 0 || time === timestamps.slice(-1)[0] || widgets.filtersExpanded) &&
+          <div className="dashboard-display-time">
+            Current time: {dateDisplay(new Date(time))}
+          </div>
+        }
+      </Fragment>}
+    </Fragment>
+  );
+}
+
+export default Dashboard;
+
+/*
 export default class Dashboard extends Component {
   constructor() {
     super();
@@ -69,12 +251,9 @@ export default class Dashboard extends Component {
       chartsExpanded: false,
       filtersExpanded: false,
     }
-    this.registeredRegions = [];
     this.mapNode = null;
   }
 
-  // Not in use yet
-  /*
   handleReload = () => {
     document.location.reload();
   }
@@ -83,16 +262,13 @@ export default class Dashboard extends Component {
     const { mapStyle } = this.state;
     this.setState({ mapStyle: permuteMapStyles(mapStyle) });
   }
-  */
 
-  setTime = (event, value) => {
+  setTime = (e, value) => {
     this.setState({
       currentTime: value,
     });
   };
 
-  // Not in use yet
-  /*
   handleSetLive = () => {
     const { data } = this.state,
           { laboratory } = data;
@@ -106,7 +282,6 @@ export default class Dashboard extends Component {
       currentTime: timestamps[timestamps.length - 1],
     });
   }
-  */
 
   handleToggleCharts = () => {
     this.setState({
@@ -291,3 +466,4 @@ export default class Dashboard extends Component {
     );
   }
 }
+*/
